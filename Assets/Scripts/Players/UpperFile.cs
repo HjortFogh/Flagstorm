@@ -11,5 +11,4 @@ class UpperFile : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
             agent.RequestDecision();
     }
-
 }

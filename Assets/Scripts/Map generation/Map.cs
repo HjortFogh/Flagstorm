@@ -22,6 +22,8 @@ public class Map
         }
     }
 
+    public TileType[,] GetGrid() { return grid; }
+
     public bool IsWalkable(int x, int y)
     {
         if (x < 0 || x >= grid.GetLength(0) || y < 0 || y >= grid.GetLength(1))

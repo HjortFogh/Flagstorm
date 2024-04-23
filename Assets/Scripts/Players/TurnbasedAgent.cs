@@ -1,12 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using System;
 
 public class TurnbasedAgent : Agent
 {
+    Action<Move> OnDone;
+
     public override void OnEpisodeBegin()
     {
         Debug.Log("OnEpisodeBegin");
@@ -21,13 +22,18 @@ public class TurnbasedAgent : Agent
     {
         float moveX = actions.ContinuousActions[0];
         float moveY = actions.ContinuousActions[1];
-        transform.position += new Vector3(moveX, 0, moveY);
+        OnDone(new Move());
     }
-  
+
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var actions = actionsOut.ContinuousActions;
         actions[0] = Input.GetAxisRaw("Horizontal");
         actions[1] = Input.GetAxisRaw("Vertical");
+    }
+
+    public void SetCallback(Action<Move> callback)
+    {
+        OnDone = callback;
     }
 }
