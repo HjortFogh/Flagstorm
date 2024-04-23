@@ -1,21 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-class Piece
-{
-    // ...
-};
-
 public struct Move
 {
-    int x, y;
-    Piece piece;
+    public int x;
+    public int y;
+
+    public Move(int x, int y)
+    {
+        this.x = x;
+        this.y = y;
+    }
 }
 
 public interface IBaseTeam
 {
-    public void InitializeTeam();
     public Move? RequestMove();
 }
 
@@ -32,25 +28,31 @@ public class PlayerTeam : IBaseTeam
     }
 }
 
-public class MLAgentTeam : IBaseTeam
+public class MLAgentTeam : IBaseTeam 
 {
-    TurnbasedAgent[] agents;
+    private TurnbasedAgent[] m_Agents;
+    private int m_CurrentPlayerIndex = 0;
+    private int m_TeamSize = 6;
+
     Move? ourMove;
 
     public void InitializeTeam()
     {
-        agents = new TurnbasedAgent[6];
-        foreach (TurnbasedAgent agent in agents)
+        m_Agents = new TurnbasedAgent[m_TeamSize];
+        foreach (TurnbasedAgent agent in m_Agents)
+        {
             agent.SetCallback((Move agentMove) => { ourMove = agentMove; });
+        }
     }
 
-    public Move? RequestMove()
+    public Move? RequestMove() 
     {
+        m_Agents[m_CurrentPlayerIndex].RequestMove();
         Move? currentMove = ourMove;
         ourMove = null;
 
-        if (currentMove != null)
-        { /* increment current player */ }
+        if(currentMove != null)
+            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_TeamSize;
 
         return currentMove;
     }
