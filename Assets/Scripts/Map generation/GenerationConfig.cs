@@ -1,14 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class ColorToTileObject {
+public class ColorToTileRuleset
+{
     public Color color;
-    public TileObject tile;
+    public TileRuleset tile;
 
-    public static TileObject Find(List<ColorToTileObject> list, Color key) {
-        foreach (ColorToTileObject pair in list)
+    public static TileRuleset Find(List<ColorToTileRuleset> list, Color key)
+    {
+        foreach (ColorToTileRuleset pair in list)
         {
             if (
                 Mathf.Approximately(pair.color.r, key.r) &&
@@ -21,11 +22,11 @@ public class ColorToTileObject {
     }
 }
 
-[CreateAssetMenu(fileName = "New generation config", menuName = "Capture the Flag/Generation Config")]
+[CreateAssetMenu(fileName = "New Generation Config", menuName = "Capture the Flag/Generation Config")]
 public class GenerationConfig : ScriptableObject
 {
-    public List<TileObject> tileset;
+    public List<TileRuleset> tileset;
     public int width = 28, height = 28;
     public List<Texture2D> maps;
-    public List<ColorToTileObject> mapper;
+    public List<ColorToTileRuleset> mapper;
 }

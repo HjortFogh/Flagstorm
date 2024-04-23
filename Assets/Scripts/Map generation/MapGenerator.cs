@@ -5,52 +5,56 @@ using UnityEngine;
 
 public static class MapGenerator
 {
-    public enum Direction {
+    public enum Direction
+    {
         North = 0, East, South, West
     };
 
     static Direction OppositeDirection(Direction dir) { return (Direction)(((int)dir + 2) % 4); }
 
-    static List<TileObject> GrabEdge(TileObject tile, Direction dir) {
-        switch(dir) 
+    static List<TileRuleset> GrabEdge(TileRuleset tile, Direction dir)
+    {
+        return dir switch
         {
-        case Direction.North:
-            return tile.north;
-        case Direction.East:
-            return tile.east;
-        case Direction.South:
-            return tile.south;
-        case Direction.West:
-            return tile.west;
-        }
-        return null;
+            Direction.North => tile.north,
+            Direction.East => tile.east,
+            Direction.South => tile.south,
+            Direction.West => tile.west,
+            _ => null,
+        };
     }
 
-    static bool Matches(TileObject from, TileObject to, Direction dir) {
-        List<TileObject> fromEdge = GrabEdge(from, dir);
-        List<TileObject> toEdge = GrabEdge(to, OppositeDirection(dir));
+    static bool Matches(TileRuleset from, TileRuleset to, Direction dir)
+    {
+        List<TileRuleset> fromEdge = GrabEdge(from, dir);
+        List<TileRuleset> toEdge = GrabEdge(to, OppositeDirection(dir));
 
         return fromEdge.Contains(to) && toEdge.Contains(from);
     }
 
-    class Cell {
-        List<TileObject> options;
-        public TileObject tile = null;
-        
-        public Cell(List<TileObject> _options) {
+    class Cell
+    {
+        List<TileRuleset> options;
+        public TileRuleset tile = null;
+
+        public Cell(List<TileRuleset> _options)
+        {
             options = _options;
         }
 
-        public int Entropy() {
+        public int Entropy()
+        {
             if (tile != null) return 0;
             return options.Count;
         }
 
-        public void CollapseAs(TileObject _tile) {
+        public void CollapseAs(TileRuleset _tile)
+        {
             tile = _tile;
         }
 
-        public void Collapse() {
+        public void Collapse()
+        {
             if (Entropy() == 0)
                 return;
 
@@ -70,18 +74,22 @@ public static class MapGenerator
             });
         }
 
-        public void Propagate(TileObject other, Direction dirFromThis) {
+        public void Propagate(TileRuleset other, Direction dirFromThis)
+        {
             options = options.Where(possible => Matches(possible, other, dirFromThis)).ToList();
         }
     }
 
-    static Vector2Int? MinimalEntropy(Cell[,] grid) {
+    static Vector2Int? MinimalEntropy(Cell[,] grid)
+    {
 
         int minEntropy = int.MaxValue;
         List<Vector2Int> minCoords = new();
 
-        for (int i = 0; i < grid.GetLength(0); i++) {
-            for (int j = 0; j < grid.GetLength(1); j++) {
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
                 int entropy = grid[i, j].Entropy();
 
                 if (entropy == 0)
@@ -89,7 +97,8 @@ public static class MapGenerator
 
                 if (entropy == minEntropy)
                     minCoords.Add(new Vector2Int(i, j));
-                else if (entropy < minEntropy) {
+                else if (entropy < minEntropy)
+                {
                     minCoords.Clear();
                     minCoords.Add(new Vector2Int(i, j));
                     minEntropy = entropy;
@@ -103,78 +112,81 @@ public static class MapGenerator
         return minCoords[Random.Range(0, minCoords.Count)];
     }
 
-    static void PopulateMap(GenerationConfig config, Cell[,] grid, Map map) {
+    static void PropagateCell(int x, int y, Cell[,] grid)
+    {
+        int width = grid.GetLength(0), height = grid.GetLength(1);
+        Cell updated = grid[x, y];
+
+        if (y + 1 < height)
+            grid[x, y + 1].Propagate(updated.tile, Direction.North);
+        if (x - 1 >= 0)
+            grid[x - 1, y].Propagate(updated.tile, Direction.East);
+        if (y - 1 >= 0)
+            grid[x, y - 1].Propagate(updated.tile, Direction.South);
+        if (x + 1 < width)
+            grid[x + 1, y].Propagate(updated.tile, Direction.West);
+    }
+
+    static void TryPopulateMap(GenerationConfig config, Cell[,] grid)
+    {
         Texture2D source = config.maps[Random.Range(0, config.maps.Count)];
         Color[] pixels = source.GetPixels();
 
         if (pixels.GetLength(0) != config.width * config.height)
             return;
 
-        for (int x = 0; x < config.width; x++) {
-            for (int y = 0; y < config.width; y++) {
+        for (int x = 0; x < config.width; x++)
+        {
+            for (int y = 0; y < config.width; y++)
+            {
                 int index = y * config.width + x;
                 Color color = pixels[index];
 
                 if (Mathf.Approximately(color.a, 0.0f))
                     continue;
-                
-                TileObject obj = ColorToTileObject.Find(config.mapper, color);
-                
+
+                TileRuleset obj = ColorToTileRuleset.Find(config.mapper, color);
+
                 if (obj == null)
                     continue;
 
                 grid[x, y].CollapseAs(obj);
-
-                if (y + 1 < config.height)
-                    grid[x, y + 1].Propagate(obj, Direction.North);
-                if (x - 1 >= 0)
-                    grid[x - 1, y].Propagate(obj, Direction.East);
-                if (y - 1 >= 0)
-                    grid[x, y - 1].Propagate(obj, Direction.South);
-                if (x + 1 < config.width)
-                    grid[x + 1, y].Propagate(obj, Direction.West);
-
-                map.SetCell(new Vector2Int(x, y), config.tileset.IndexOf(obj));
+                PropagateCell(x, y, grid);
             }
         }
     }
 
-    public static Map Generate(GenerationConfig config) {
-        Map map = new();
-        map.Initialize(config.width, config.height, config.tileset);
-
+    public static Map Generate(GenerationConfig config)
+    {
         Cell[,] grid = new Cell[config.width, config.height];
 
         for (int i = 0; i < grid.GetLength(0); i++)
         {
             for (int j = 0; j < grid.GetLength(1); j++)
-                grid[i, j] = new Cell(new List<TileObject>(config.tileset));
+                grid[i, j] = new Cell(new List<TileRuleset>(config.tileset));
         }
 
-        PopulateMap(config, grid, map);
+        TryPopulateMap(config, grid);
 
-        for (int i = 0; i < config.width * config.height; i++) {
+        for (int i = 0; i < config.width * config.height; i++)
+        {
             Vector2Int? nullableCoord = MinimalEntropy(grid);
             if (nullableCoord == null)
                 break;
-            
+
             Vector2Int coord = (Vector2Int)nullableCoord;
 
             grid[coord.x, coord.y].Collapse();
-            TileObject other = grid[coord.x, coord.y].tile;
-            
-            if (coord.y + 1 < config.height)
-                grid[coord.x, coord.y + 1].Propagate(other, Direction.North);
-            if (coord.x - 1 >= 0)
-                grid[coord.x - 1, coord.y].Propagate(other, Direction.East);
-            if (coord.y - 1 >= 0)
-                grid[coord.x, coord.y - 1].Propagate(other, Direction.South);
-            if (coord.x + 1 < config.width)
-                grid[coord.x + 1, coord.y].Propagate(other, Direction.West);
-
-            map.SetCell(coord, config.tileset.IndexOf(other));
+            PropagateCell(coord.x, coord.y, grid);
         }
-        
-        return map;
+
+        TileRuleset[,] rulesets = new TileRuleset[config.width, config.height];
+        for (int i = 0; i < config.width * config.height; i++)
+        {
+            int x = i / config.height, y = i % config.height;
+            rulesets[x, y] = grid[x, y].tile;
+        }
+
+        return Map.Create(rulesets);
     }
 }
