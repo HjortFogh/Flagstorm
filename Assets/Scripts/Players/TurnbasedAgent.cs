@@ -78,12 +78,4 @@ public class TurnbasedAgent : Agent
             RequestDecision();
         }
     }
-
-    public void MakeMove(Move move)
-    {
-        agentX += move.x;
-        agentY += move.y;
-        transform.position = new Vector3(agentX, 0, agentY);
-    }
-
 }

@@ -42,11 +42,10 @@ public class MLAgentTeam : IBaseTeam
 {
     private TurnbasedAgent[] m_Agents;
     private int m_CurrentPlayerIndex = 0;
-    private int m_TeamSize = 6;
 
     Move? ourMove;
 
-    public void InitializeTeam()
+    public void InitializeTeam(int teamSize)
     {
         m_Agents = new TurnbasedAgent[teamSize];
 
@@ -54,9 +53,7 @@ public class MLAgentTeam : IBaseTeam
         //     m_Agents[i] = new();
 
         foreach (TurnbasedAgent agent in m_Agents)
-        {
             agent.SetCallback((Move agentMove) => { ourMove = agentMove; });
-        }
     }
 
     public Move? RequestMove()
@@ -66,7 +63,7 @@ public class MLAgentTeam : IBaseTeam
         ourMove = null;
 
         if (currentMove != null)
-            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_TeamSize;
+            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_Agents.GetLength(0);
 
         return currentMove;
     }

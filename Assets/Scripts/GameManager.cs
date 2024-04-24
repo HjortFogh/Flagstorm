@@ -8,9 +8,10 @@ public class GameManager : MonoBehaviour
     private List<IBaseTeam> m_Teams = new List<IBaseTeam>();
     private int m_CurrentTeamIndex = 0;
 
-    void Awake()
+    void Start()
     {
         m_Map = MapGenerator.Generate(generationConfig);
+        InitializeTeams();
     }
 
     void Update()
@@ -19,7 +20,7 @@ public class GameManager : MonoBehaviour
 
         // if (currentTeam is MLAgentTeam)
         //     AiUtils.GenerateThisFrameBoard(m_Map, m_Teams, m_CurrentTeamIndex);
-        
+
         // Move? move = currentTeam.RequestMove();
         // if (move != null)
         // {
@@ -31,12 +32,12 @@ public class GameManager : MonoBehaviour
 
     void InitializeTeams(/* maybe some parameters */)
     {
-        PlayerTeam playerTeam = new PlayerTeam();
-        playerTeam.InitializeTeam();
+        PlayerTeam playerTeam = new();
+        playerTeam.InitializeTeam(6);
         m_Teams.Add(playerTeam);
 
-        MLAgentTeam mlAgentTeam = new MLAgentTeam();
-        mlAgentTeam.InitializeTeam();
+        MLAgentTeam mlAgentTeam = new();
+        mlAgentTeam.InitializeTeam(6);
         m_Teams.Add(mlAgentTeam);
     }
 
