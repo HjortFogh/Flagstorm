@@ -44,7 +44,6 @@ public class TurnbasedAgent : Agent
     2 = unfriendly agent
     3 = enemy flag
     4 = friendly flag
-    5 = barriers
 
     * = YOU.
     [0, 0, 1, 1, 1, 1, 3, 4, 5]
@@ -79,4 +78,12 @@ public class TurnbasedAgent : Agent
             RequestDecision();
         }
     }
+
+    public void MakeMove(Move move)
+    {
+        agentX += move.x;
+        agentY += move.y;
+        transform.position = new Vector3(agentX, 0, agentY);
+    }
+
 }

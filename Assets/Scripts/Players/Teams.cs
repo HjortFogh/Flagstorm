@@ -10,10 +10,16 @@ public struct Move
     }
 }
 
+public class PlayerAgent
+{
+
+}
+
 public interface IBaseTeam
 {
     public void InitializeTeam(int teamSize);
     public Move? RequestMove();
+
 }
 
 public class PlayerTeam : IBaseTeam
@@ -29,16 +35,18 @@ public class PlayerTeam : IBaseTeam
     {
         throw new System.NotImplementedException();
     }
+
 }
 
 public class MLAgentTeam : IBaseTeam
 {
-    TurnbasedAgent[] m_Agents;
-    int m_CurrentPlayerIndex = 0;
+    private TurnbasedAgent[] m_Agents;
+    private int m_CurrentPlayerIndex = 0;
+    private int m_TeamSize = 6;
 
-    Move? m_OurMove;
+    Move? ourMove;
 
-    public void InitializeTeam(int teamSize)
+    public void InitializeTeam()
     {
         m_Agents = new TurnbasedAgent[teamSize];
 
@@ -46,17 +54,19 @@ public class MLAgentTeam : IBaseTeam
         //     m_Agents[i] = new();
 
         foreach (TurnbasedAgent agent in m_Agents)
-            agent.SetCallback((Move agentMove) => { m_OurMove = agentMove; });
+        {
+            agent.SetCallback((Move agentMove) => { ourMove = agentMove; });
+        }
     }
 
     public Move? RequestMove()
     {
         m_Agents[m_CurrentPlayerIndex].RequestMove();
-        Move? currentMove = m_OurMove;
-        m_OurMove = null;
+        Move? currentMove = ourMove;
+        ourMove = null;
 
         if (currentMove != null)
-            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_Agents.GetLength(0);
+            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_TeamSize;
 
         return currentMove;
     }
