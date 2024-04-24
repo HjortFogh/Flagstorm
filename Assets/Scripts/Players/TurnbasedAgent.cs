@@ -6,13 +6,21 @@ using System;
 
 public class TurnbasedAgent : Agent
 {
+    Piece m_Piece;
+
     Action<Move> OnDone;
     bool makingMove = false;
+
+    void Awake()
+    {
+        if (!TryGetComponent(out m_Piece))
+            gameObject.AddComponent<Piece>();
+    }
 
     public override void OnEpisodeBegin()
     {
     }
-    
+
     //tjek om der findes andre sensorer end vectorsensor
     public override void CollectObservations(VectorSensor sensor)
     {
@@ -25,7 +33,7 @@ public class TurnbasedAgent : Agent
         //     sensor.AddObservation(value);
         // }
 
-        
+
         // sensor.AddObservation(,);
         // sensor.addObservation(ABC.QueryBoard());
         sensor.AddObservation(transform.position);
@@ -50,7 +58,7 @@ public class TurnbasedAgent : Agent
         makingMove = false;
         OnDone(new Move(x, y));
     }
-  
+
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var actions = actionsOut.ContinuousActions;

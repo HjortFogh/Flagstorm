@@ -12,12 +12,15 @@ public struct Move
 
 public interface IBaseTeam
 {
+    public void InitializeTeam(int teamSize);
     public Move? RequestMove();
 }
 
 public class PlayerTeam : IBaseTeam
 {
-    public void InitializeTeam()
+    Piece[] m_Pieces;
+
+    public void InitializeTeam(int teamSize)
     {
         throw new System.NotImplementedException();
     }
@@ -39,10 +42,8 @@ public class MLAgentTeam : IBaseTeam
     {
         m_Agents = new TurnbasedAgent[teamSize];
 
-        // REMOVEME:
-        if (m_Agents[0] == null)
-            throw new System.Exception("Items in MLAgentTeam.m_Agents not initialized");
-        // REMOVEME
+        // for (int i = 0; i < teamSize; i++) FIXME:
+        //     m_Agents[i] = new();
 
         foreach (TurnbasedAgent agent in m_Agents)
             agent.SetCallback((Move agentMove) => { m_OurMove = agentMove; });

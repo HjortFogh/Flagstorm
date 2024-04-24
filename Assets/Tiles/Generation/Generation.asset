@@ -19,7 +19,7 @@ MonoBehaviour:
   width: 28
   height: 28
   maps:
-  - {fileID: 2800000, guid: 2eb48d4182893724fa7f11ecbe389d23, type: 3}
+  - {fileID: 2800000, guid: 1eaa011b9cfa5334ca5ec06fdb4445c1, type: 3}
   mapper:
   - color: {r: 0, g: 0, b: 0, a: 0}
     tile: {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
