@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015467abf0e847847b4d4de71ddcf142, type: 3}
   m_Name: Dirt Tile
   m_EditorClassIdentifier: 
-  prefab: {fileID: 5155487608495232155, guid: 3b1e1d66c5344934ab0f1b2a3d050d0c, type: 3}
-  weight: 1
+  weight: 3
   north:
   - {fileID: 11400000, guid: 44d3f02fece25dd4c86a30dc51627cfe, type: 2}
   - {fileID: 11400000, guid: ca6e720318d34b74abf72b4dbd026565, type: 2}
@@ -30,3 +29,4 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 44d3f02fece25dd4c86a30dc51627cfe, type: 2}
   - {fileID: 11400000, guid: ca6e720318d34b74abf72b4dbd026565, type: 2}
   - {fileID: 11400000}
+  type: {fileID: 11400000, guid: 7528dd010506233b8b27c0d3df6cc5d0, type: 2}

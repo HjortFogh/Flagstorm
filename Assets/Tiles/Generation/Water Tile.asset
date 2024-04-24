@@ -12,8 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015467abf0e847847b4d4de71ddcf142, type: 3}
   m_Name: Water Tile
   m_EditorClassIdentifier: 
-  prefab: {fileID: 3003462278911065189, guid: 0807d339013b0ba4aae4a23c6037592a, type: 3}
-  weight: 1
+  weight: 10
   north:
   - {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
   - {fileID: 11400000}
@@ -26,3 +25,4 @@ MonoBehaviour:
   west:
   - {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
   - {fileID: 11400000}
+  type: {fileID: 11400000, guid: fba411c866b7c86bb93e57cc837887e8, type: 2}

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   identifier: 0
-  prefab: {fileID: 7283669076764440371, guid: c9faa6c4dc000f045902e0f033d7c723, type: 3}
+  prefab: {fileID: 5155487608495232155, guid: 3b1e1d66c5344934ab0f1b2a3d050d0c, type: 3}
   walkable: 1
