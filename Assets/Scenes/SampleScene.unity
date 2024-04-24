@@ -247,8 +247,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   generationConfig: {fileID: 11400000, guid: 0f5f4968d309b7c47a5db94dd0364d7d, type: 2}
-  agentPrefab: {fileID: 8588625347923138522, guid: ee1c38c42d5581165a376a963a01c0b7, type: 3}
-  playerPrefab: {fileID: 2773930531432287277, guid: 890ce76d405b16bec903b341ca6f6788, type: 3}
+  teamConfigs:
+  - prefab: {fileID: 8588625347923138522, guid: ee1c38c42d5581165a376a963a01c0b7, type: 3}
+    type: 1
+    teamSize: 6
+  - prefab: {fileID: 2773930531432287277, guid: 890ce76d405b16bec903b341ca6f6788, type: 3}
+    type: 0
+    teamSize: 6
 --- !u!4 &713260933
 Transform:
   m_ObjectHideFlags: 0
