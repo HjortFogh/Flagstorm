@@ -10,6 +10,8 @@ public class TurnbasedAgent : Agent
     private System.Action<Move> m_OnDone;
     private bool m_MakingMove = false;
 
+    const int observationRadius = 2;
+
     void Awake()
     {
         if (!TryGetComponent(out m_Piece))
@@ -23,7 +25,27 @@ public class TurnbasedAgent : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(transform.position);
+        // Piece position
+        sensor.AddObservation(m_Piece.x);
+        sensor.AddObservation(m_Piece.y);
+
+        // Team flag position
+
+        // Team-base position
+
+        // Point of interest (e.g. EnemyFlag/Wood)
+
+        // Frame-board 4x4 around agent
+        // int[,] board = AiUtils.QueryBoard(m_Piece, observationRadius);
+
+        // for (int i = 0; i < board.GetLength(0); i++)
+        // {
+        //     for (int j = 0; j < board.GetLength(1); j++)
+        //     {
+        //         sensor.AddObservation(board[i, j]);
+        //     }
+        // }
+
     }
 
     private int ArgMax(float[] array)

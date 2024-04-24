@@ -1,14 +1,31 @@
 using UnityEngine;
 
+public struct Move
+{
+    public int x;
+    public int y;
+
+    public Piece piece;
+
+    public Move(Piece _piece, int _x, int _y)
+    {
+        piece = _piece;
+        x = _x;
+        y = _y;
+    }
+}
+
+
 public class Piece : MonoBehaviour
 {
-    public enum PieceType
-    {
-        Attacker, Defender
-    };
+    // Attacker, Defender
+    public enum PieceType { Static, Nonstatic };
+    public PieceType type;
 
     public int x, y;
     private bool m_OnBoard;
+
+    //private IPieceObject m_Holding;
 
     public bool OnBoard
     {
@@ -47,3 +64,38 @@ public class Piece : MonoBehaviour
         UpdatePosition();
     }
 }
+
+
+public class PlayerPiece : Piece
+{
+
+}
+
+public class AgentPiece : Piece
+{
+
+}
+
+public class FlagPiece : Piece
+{
+
+}
+
+public class ForestPiece : Piece
+{
+
+}
+
+/*
+
+PlayerPiece : Piece, Nonstatic
+AgentPiece : Piece, Nonstatic
+
+FlagPiece : Piece, Static
+ForestPiece : Piece, Static
+
+Hvis piece går ind forest piece:
+    ForestPiece.OnBoard = false;
+    opdater PlayerPiece.inventory = ForestPiece
+
+*/

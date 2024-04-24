@@ -4,56 +4,36 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public GenerationConfig generationConfig;
+    public List<TeamConfig> teamConfigs;
 
-    public GameObject agentPrefab, playerPrefab;
-    private readonly List<BaseTeam> m_Teams = new();
-
-    private Map m_Map;
-    private int m_CurrentTeamIndex = 0;
-
-    bool ValidateMove(Move move, Map map)
-    {
-        int gx = move.x + move.piece.x, gy = move.y + move.piece.y;
-        TileType type = map.AtCoord(gx, gy);
-
-        if (type == null)
-            return false;
-
-        foreach (BaseTeam team in m_Teams)
-        {
-            if (team.BlocksCoord(gx, gy))
-                return false;
-        }
-
-        return type.walkable;
-    }
+    private GameState m_GameState;
 
     void Start()
     {
-        m_Map = MapGenerator.Generate(generationConfig);
-        InitializeTeams();
+        Map map = MapGenerator.Generate(generationConfig);
+        m_GameState = new(map, teamConfigs);
     }
 
     void Update()
     {
-        BaseTeam currentTeam = m_Teams[m_CurrentTeamIndex];
+        // AiUtils.GenerateThisFrameBoard(m_GameState);
 
-        Move? move = currentTeam.RequestMove();
-        if (move != null && ValidateMove((Move)move, m_Map))
+        BaseTeam team = m_GameState.CurrentTeam;
+        Move? nullableMove = team.RequestMove();
+
+        if (nullableMove == null)
+            return;
+
+        Move move = (Move)nullableMove;
+
+        if (!m_GameState.ValidateMove(move))
         {
-            currentTeam.ApproveMove((Move)move);
-            m_CurrentTeamIndex = (m_CurrentTeamIndex + 1) % m_Teams.Count;
+            team.DeclineMove(move);
+            return;
         }
-    }
 
-    void InitializeTeams()
-    {
-        PlayerTeam playerTeam = new();
-        playerTeam.InitializeTeam(6, playerPrefab);
-        m_Teams.Add(playerTeam);
-
-        MLAgentTeam mlAgentTeam = new();
-        mlAgentTeam.InitializeTeam(6, agentPrefab);
-        m_Teams.Add(mlAgentTeam);
+        move.piece.Move(move.x, move.y);
+        team.NextPlayer();
+        m_GameState.NextTeam();
     }
 }

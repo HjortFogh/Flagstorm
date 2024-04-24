@@ -1,5 +1,19 @@
 public class Map
 {
+    // 0, 1
+    // Grass  w  w
+    // Dirt   w  w
+    // Water  n  n
+    // Forest n  w
+
+    // Forest n  w
+    // Forest.Interact() -> Grass
+
+    // Piece.Attacker, Piece.Defender
+    // (tile type, agent type) -> walkable or not
+
+    // TileType whenInteracted -> Grass
+
     TileType[,] grid;
 
     public int Width { get => grid.GetLength(0); }

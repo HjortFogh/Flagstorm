@@ -1,17 +1,22 @@
 using UnityEngine;
 
-public struct Move
+
+[System.Serializable]
+public class TeamConfig
 {
-    public int x;
-    public int y;
+    public GameObject prefab;
+    public enum TeamType { Human, Model }
+    public TeamType type;
+    public int teamSize = 6;
+    // public Vector2Int startingPosition
 
-    public Piece piece;
-
-    public Move(Piece _piece, int _x, int _y)
+    public BaseTeam GetClass()
     {
-        piece = _piece;
-        x = _x;
-        y = _y;
+        return type switch
+        {
+            TeamType.Human => new PlayerTeam(),
+            _ => new MLAgentTeam(),
+        };
     }
 }
 
@@ -21,6 +26,8 @@ public abstract class BaseTeam
     protected Piece[] m_Pieces;
 
     protected int m_CurrentPlayerIndex;
+
+    // private 
 
     public virtual bool BlocksCoord(int xGlobal, int yGlobal)
     {
@@ -44,13 +51,14 @@ public abstract class BaseTeam
         }
     }
 
-    public virtual void ApproveMove(Move move)
+    public abstract Move? RequestMove();
+
+    public virtual void NextPlayer()
     {
-        move.piece.Move(move.x, move.y);
         m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_Pieces.GetLength(0);
     }
 
-    public abstract Move? RequestMove();
+    public virtual void DeclineMove(Move move) { }
 }
 
 public class PlayerTeam : BaseTeam
@@ -84,7 +92,7 @@ public class PlayerTeam : BaseTeam
 public class MLAgentTeam : BaseTeam
 {
     private TurnbasedAgent[] m_Agents;
-    Move? m_OurMove;
+    private Move? m_OurMove;
 
     public override void InitializeTeam(int teamSize, GameObject prefab)
     {
@@ -114,5 +122,14 @@ public class MLAgentTeam : BaseTeam
         m_OurMove = null;
 
         return currentMove;
+    }
+
+    public override void DeclineMove(Move move)
+    {
+        TurnbasedAgent agent = m_Agents[m_CurrentPlayerIndex];
+
+        // agent.SetReward(-1.00f);
+        // agent.EndEpisode();
+
     }
 }
