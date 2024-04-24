@@ -6,10 +6,10 @@ using System;
 
 public class TurnbasedAgent : Agent
 {
-    Piece m_Piece;
+    private Piece m_Piece;
 
-    Action<Move> OnDone;
-    bool makingMove = false;
+    private Action<Move> m_OnDone;
+    private bool m_MakingMove = false;
 
     void Awake()
     {
@@ -54,8 +54,8 @@ public class TurnbasedAgent : Agent
         int x = (int)actions.ContinuousActions[0];
         int y = (int)actions.ContinuousActions[1];
 
-        makingMove = false;
-        OnDone(new Move(x, y));
+        m_MakingMove = false;
+        m_OnDone(new Move(m_Piece, x, y));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -67,14 +67,14 @@ public class TurnbasedAgent : Agent
 
     public void SetCallback(Action<Move> callback)
     {
-        OnDone = callback;
+        m_OnDone = callback;
     }
 
     public void RequestMove()
     {
-        if (!makingMove)
+        if (!m_MakingMove)
         {
-            makingMove = true;
+            m_MakingMove = true;
             RequestDecision();
         }
     }

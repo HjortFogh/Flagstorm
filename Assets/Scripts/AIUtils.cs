@@ -18,20 +18,17 @@ static class AiUtils
     5 hvis enemy flag
     */
 
-    public static void GenerateThisFrameBoard(Map map, List<IBaseTeam> teams, int currentTeamIndex)
+    public static void GenerateThisFrameBoard(Map map, List<BaseTeam> teams, int currentTeamIndex)
     {
-        int width = map.GetGrid().GetLength(0);
-        int height = map.GetGrid().GetLength(1);
+        int width = map.Width;
+        int height = map.Height;
 
         thisFrameBoard = new int[width, height];
 
         for (int i = 0; i < width * height; i++)
         {
             int x = i / height, y = i % height;
-            thisFrameBoard[x, y] = map.GetGrid()[x, y].walkable ? 0 : 1;
+            thisFrameBoard[x, y] = map.AtCoord(x, y).walkable ? 0 : 1;
         }
-
-        
-
     }
 }

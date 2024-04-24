@@ -2,6 +2,9 @@ public class Map
 {
     TileType[,] grid;
 
+    public int Width { get => grid.GetLength(0); }
+    public int Height { get => grid.GetLength(1); }
+
     public static Map Create(TileRuleset[,] rulesetGrid)
     {
         Map map = new();
@@ -22,7 +25,14 @@ public class Map
         }
     }
 
-    public TileType[,] GetGrid() { return grid; }
+    // public TileType[,] GetGrid() { return grid; }
+
+    public TileType AtCoord(int x, int y)
+    {
+        if (x < 0 || x >= grid.GetLength(0) || y < 0 || y >= grid.GetLength(1))
+            return null;
+        return grid[x, y];
+    }
 
     public bool IsWalkable(int x, int y)
     {
