@@ -9,6 +9,8 @@ public class TurnbasedAgent : Agent
     Action<Move> OnDone;
     bool makingMove = false;
 
+    public int agentX, agentY;
+
     public override void OnEpisodeBegin()
     {
     }
@@ -25,10 +27,10 @@ public class TurnbasedAgent : Agent
         //     sensor.AddObservation(value);
         // }
 
-        
-        // sensor.AddObservation(,);
-        // sensor.addObservation(ABC.QueryBoard());
-        sensor.AddObservation(transform.position);
+        sensor.AddObservation(agentX);
+        sensor.AddObservation(agentY);
+        // sensor.AddObservation(AiUtils.QueryBoard());
+        // sensor.AddObservation(transform.position);
     }
     /*
     0 = ikke walkable
@@ -36,7 +38,6 @@ public class TurnbasedAgent : Agent
     2 = unfriendly agent
     3 = enemy flag
     4 = friendly flag
-    5 = barriers
 
     * = YOU.
     [0, 0, 1, 1, 1, 1, 3, 4, 5]
@@ -71,4 +72,12 @@ public class TurnbasedAgent : Agent
             RequestDecision();
         }
     }
+
+    public void MakeMove(Move move)
+    {
+        agentX += move.x;
+        agentY += move.y;
+        transform.position = new Vector3(agentX, 0, agentY);
+    }
+
 }
