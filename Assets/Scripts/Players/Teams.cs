@@ -28,31 +28,34 @@ public class PlayerTeam : IBaseTeam
     }
 }
 
-public class MLAgentTeam : IBaseTeam 
+public class MLAgentTeam : IBaseTeam
 {
-    private TurnbasedAgent[] m_Agents;
-    private int m_CurrentPlayerIndex = 0;
-    private int m_TeamSize = 6;
+    TurnbasedAgent[] m_Agents;
+    int m_CurrentPlayerIndex = 0;
 
-    Move? ourMove;
+    Move? m_OurMove;
 
-    public void InitializeTeam()
+    public void InitializeTeam(int teamSize)
     {
-        m_Agents = new TurnbasedAgent[m_TeamSize];
+        m_Agents = new TurnbasedAgent[teamSize];
+
+        // REMOVEME:
+        if (m_Agents[0] == null)
+            throw new System.Exception("Items in MLAgentTeam.m_Agents not initialized");
+        // REMOVEME
+
         foreach (TurnbasedAgent agent in m_Agents)
-        {
-            agent.SetCallback((Move agentMove) => { ourMove = agentMove; });
-        }
+            agent.SetCallback((Move agentMove) => { m_OurMove = agentMove; });
     }
 
-    public Move? RequestMove() 
+    public Move? RequestMove()
     {
         m_Agents[m_CurrentPlayerIndex].RequestMove();
-        Move? currentMove = ourMove;
-        ourMove = null;
+        Move? currentMove = m_OurMove;
+        m_OurMove = null;
 
-        if(currentMove != null)
-            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_TeamSize;
+        if (currentMove != null)
+            m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_Agents.GetLength(0);
 
         return currentMove;
     }

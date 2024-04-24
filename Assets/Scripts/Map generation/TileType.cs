@@ -10,7 +10,7 @@ public class TileType : ScriptableObject
     public virtual void PlaceInWorld(int x, int y)
     {
         Vector3 position = new(x, 0, y);
-        Object.Instantiate(prefab, position, Quaternion.identity);
+        Instantiate(prefab, position, Quaternion.identity);
     }
 }
 
@@ -19,6 +19,6 @@ public class MultiTileType : TileType
 {
     public override void PlaceInWorld(int x, int y)
     {
-        throw new System.NotImplementedException("");
+        throw new System.NotImplementedException();
     }
 }
