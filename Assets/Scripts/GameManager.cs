@@ -42,11 +42,11 @@ public class GameManager : MonoBehaviour
         if (move != null && ValidateMove((Move)move, m_Map))
         {
             currentTeam.ApproveMove((Move)move);
-            // m_CurrentTeamIndex = (m_CurrentTeamIndex + 1) % m_Teams.Count;
+            m_CurrentTeamIndex = (m_CurrentTeamIndex + 1) % m_Teams.Count;
         }
     }
 
-    void InitializeTeams(/* maybe some parameters */)
+    void InitializeTeams()
     {
         PlayerTeam playerTeam = new();
         playerTeam.InitializeTeam(6, playerPrefab);

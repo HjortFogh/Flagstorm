@@ -2,13 +2,12 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
-using System;
 
 public class TurnbasedAgent : Agent
 {
     private Piece m_Piece;
 
-    private Action<Move> m_OnDone;
+    private System.Action<Move> m_OnDone;
     private bool m_MakingMove = false;
 
     void Awake()
@@ -19,53 +18,56 @@ public class TurnbasedAgent : Agent
 
     public override void OnEpisodeBegin()
     {
+        Debug.Log("OnEpisodeBegin");
     }
 
-    //tjek om der findes andre sensorer end vectorsensor
     public override void CollectObservations(VectorSensor sensor)
     {
-        // // Flatten the multi-dimensional array to a 1D array
-        // float[] flattenedArray = FlattenArray(multiDimensionalArray);
-
-        // // Add the flattened array as observations to the sensor
-        // foreach (float value in flattenedArray)
-        // {
-        //     sensor.AddObservation(value);
-        // }
-
-
-        // sensor.AddObservation(,);
-        // sensor.addObservation(ABC.QueryBoard());
         sensor.AddObservation(transform.position);
     }
-    /*
-    0 = ikke walkable
-    1 = friendly agent
-    2 = unfriendly agent
-    3 = enemy flag
-    4 = friendly flag
 
-    * = YOU.
-    [0, 0, 1, 1, 1, 1, 3, 4, 5]
-    */
+    private int ArgMax(float[] array)
+    {
+        float max = array[0];
+        int maxIndex = 0;
+        for (int i = 1; i < array.Length; i++)
+        {
+            if (array[i] > max)
+            {
+                max = array[i];
+                maxIndex = i;
+            }
+        }
+        return maxIndex;
+    }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        int x = (int)actions.ContinuousActions[0];
-        int y = (int)actions.ContinuousActions[1];
+        float[] strengths = new float[4];
+
+        for (int i = 0; i < 4; i++)
+            strengths[i] = actions.ContinuousActions[i];
+
+        Cardinal cardinal = (Cardinal)ArgMax(strengths);
+        Vector2Int? direction = Directions.CardinalToMove(cardinal);
+
+        if (direction == null)
+            return;
 
         m_MakingMove = false;
-        m_OnDone(new Move(m_Piece, x, y));
+        m_OnDone(new Move(m_Piece, ((Vector2Int)direction).x, ((Vector2Int)direction).y));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
     {
         var actions = actionsOut.ContinuousActions;
-        actions[0] = Input.GetAxisRaw("Horizontal");
-        actions[1] = Input.GetAxisRaw("Vertical");
+        actions[0] = Random.value;
+        actions[1] = Random.value;
+        actions[2] = Random.value;
+        actions[3] = Random.value;
     }
 
-    public void SetCallback(Action<Move> callback)
+    public void SetCallback(System.Action<Move> callback)
     {
         m_OnDone = callback;
     }

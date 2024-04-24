@@ -27,7 +27,7 @@ public class Piece : MonoBehaviour
 
     public void UpdatePosition(Vector3? forward = null)
     {
-        Vector3 newPosition = new(x + 0.5f, 0, y + 0.5f);
+        Vector3 newPosition = new(x, 0, y);
         transform.position = newPosition;
         if (forward != null)
             transform.rotation = Quaternion.LookRotation((Vector3)forward, transform.up);

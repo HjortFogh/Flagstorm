@@ -4,29 +4,22 @@ using UnityEngine;
 
 public static class MapGenerator
 {
-    public enum Direction
-    {
-        North = 0, East, South, West
-    };
-
-    static Direction OppositeDirection(Direction dir) { return (Direction)(((int)dir + 2) % 4); }
-
-    static List<TileRuleset> GrabEdge(TileRuleset tile, Direction dir)
+    static List<TileRuleset> GrabEdge(TileRuleset tile, Cardinal dir)
     {
         return dir switch
         {
-            Direction.North => tile.north,
-            Direction.East => tile.east,
-            Direction.South => tile.south,
-            Direction.West => tile.west,
+            Cardinal.North => tile.north,
+            Cardinal.East => tile.east,
+            Cardinal.South => tile.south,
+            Cardinal.West => tile.west,
             _ => null,
         };
     }
 
-    static bool Matches(TileRuleset from, TileRuleset to, Direction dir)
+    static bool Matches(TileRuleset from, TileRuleset to, Cardinal dir)
     {
         List<TileRuleset> fromEdge = GrabEdge(from, dir);
-        List<TileRuleset> toEdge = GrabEdge(to, OppositeDirection(dir));
+        List<TileRuleset> toEdge = GrabEdge(to, Directions.OppositeCardinal(dir));
 
         return fromEdge.Contains(to) && toEdge.Contains(from);
     }
@@ -73,7 +66,7 @@ public static class MapGenerator
             });
         }
 
-        public void Propagate(TileRuleset other, Direction dirFromThis)
+        public void Propagate(TileRuleset other, Cardinal dirFromThis)
         {
             options = options.Where(possible => Matches(possible, other, dirFromThis)).ToList();
         }
@@ -117,13 +110,13 @@ public static class MapGenerator
         Cell updated = grid[x, y];
 
         if (y + 1 < height)
-            grid[x, y + 1].Propagate(updated.tile, Direction.North);
+            grid[x, y + 1].Propagate(updated.tile, Cardinal.North);
         if (x - 1 >= 0)
-            grid[x - 1, y].Propagate(updated.tile, Direction.East);
+            grid[x - 1, y].Propagate(updated.tile, Cardinal.East);
         if (y - 1 >= 0)
-            grid[x, y - 1].Propagate(updated.tile, Direction.South);
+            grid[x, y - 1].Propagate(updated.tile, Cardinal.South);
         if (x + 1 < width)
-            grid[x + 1, y].Propagate(updated.tile, Direction.West);
+            grid[x + 1, y].Propagate(updated.tile, Cardinal.West);
     }
 
     static void TryPopulateMap(GenerationConfig config, Cell[,] grid)

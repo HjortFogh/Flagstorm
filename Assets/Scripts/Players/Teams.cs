@@ -62,7 +62,7 @@ public class PlayerTeam : BaseTeam
         if (!currentPiece.OnBoard)
         {
             m_Pieces[m_CurrentPlayerIndex].OnBoard = true;
-            m_Pieces[m_CurrentPlayerIndex].Teleport(14, 14);
+            m_Pieces[m_CurrentPlayerIndex].Teleport(14, 24);
 
             m_CurrentPlayerIndex = 0;
             currentPiece = m_Pieces[m_CurrentPlayerIndex];
@@ -100,9 +100,19 @@ public class MLAgentTeam : BaseTeam
 
     public override Move? RequestMove()
     {
+        Piece currentPiece = m_Pieces[m_CurrentPlayerIndex];
+
+        if (!currentPiece.OnBoard)
+        {
+            m_Pieces[m_CurrentPlayerIndex].OnBoard = true;
+            m_Pieces[m_CurrentPlayerIndex].Teleport(14, 4);
+            m_CurrentPlayerIndex = 0;
+        }
+
         m_Agents[m_CurrentPlayerIndex].RequestMove();
         Move? currentMove = m_OurMove;
         m_OurMove = null;
+
         return currentMove;
     }
 }

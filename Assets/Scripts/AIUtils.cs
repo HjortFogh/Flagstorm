@@ -14,9 +14,15 @@ static class AiUtils
     1 hvis walkable,
     2 hvis friendly agent,
     3 hvis enemy agent
-    4 hvis friendly flag,
-    5 hvis enemy flag
+    4 hvis point of interest (modstander flag/træ),
+    5 hvis my flag i startpos,
+    6 hvis my base,
     */
+
+    // public static void GenerateThisFrameBoard(Map map, List<BaseTeam> teams, Piece piece)
+    // {
+
+    // }
 
     public static void GenerateThisFrameBoard(Map map, List<BaseTeam> teams, int currentTeamIndex)
     {
