@@ -1,14 +1,16 @@
 using UnityEngine;
 
-
 [System.Serializable]
 public class TeamConfig
 {
-    public GameObject prefab;
     public enum TeamType { Human, Model }
     public TeamType type;
     public int teamSize = 6;
-    // public Vector2Int startingPosition
+
+    public Material material;
+
+    public Vector2Int basePosition;
+    public Vector2Int flagPosition;
 
     public BaseTeam GetClass()
     {
@@ -22,40 +24,55 @@ public class TeamConfig
 
 public abstract class BaseTeam
 {
-    public GameObject piecePrefab;
-    protected Piece[] m_Pieces;
+    public MovablePiece[] Pieces;
+
+    public FlagPiece teamFlag;
+    public Vector2Int spawnPoint;
+    public TeamConfig teamConfig;
 
     protected int m_CurrentPlayerIndex;
 
-    // private 
-
     public virtual bool BlocksCoord(int xGlobal, int yGlobal)
     {
-        foreach (Piece piece in m_Pieces)
+        foreach (Piece piece in Pieces)
         {
-            if (piece.x == xGlobal && piece.y == yGlobal)
+            if (piece.X == xGlobal && piece.Y == yGlobal)
                 return true;
         }
         return false;
     }
 
-    public virtual void InitializeTeam(int teamSize, GameObject prefab)
+    public virtual void InitializeTeam(int teamSize, TeamConfig config, FlagPiece flag)
     {
-        piecePrefab = prefab;
-        m_Pieces = new Piece[teamSize];
+        Pieces = new MovablePiece[teamSize];
+        teamConfig = config;
 
         for (int i = 0; i < teamSize; i++)
         {
-            GameObject obj = Object.Instantiate(piecePrefab, Vector3.zero, Quaternion.identity);
-            m_Pieces[i] = obj.GetComponent<Piece>();
+            bool isAttacker = i % 2 == 0;
+            GameObject piece = new();
+
+            if (isAttacker)
+                Pieces[i] = piece.AddComponent<AttackerPiece>();
+            else
+                Pieces[i] = piece.AddComponent<DefenderPiece>();
+
+            Pieces[i].Teleport(config.basePosition.x, config.basePosition.y);
+            Pieces[i].OnBoard = false;
+
+            Pieces[i].SetupTeam(this);
+            Pieces[i].gameObject.GetComponent<MeshRenderer>().material = config.material;
         }
+
+        teamFlag = flag;
+        spawnPoint = config.basePosition;
     }
 
     public abstract Move? RequestMove();
 
     public virtual void NextPlayer()
     {
-        m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % m_Pieces.GetLength(0);
+        m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % Pieces.GetLength(0);
     }
 
     public virtual void DeclineMove(Move move) { }
@@ -65,15 +82,15 @@ public class PlayerTeam : BaseTeam
 {
     public override Move? RequestMove()
     {
-        Piece currentPiece = m_Pieces[m_CurrentPlayerIndex];
+        Piece currentPiece = Pieces[m_CurrentPlayerIndex];
 
         if (!currentPiece.OnBoard)
         {
-            m_Pieces[m_CurrentPlayerIndex].OnBoard = true;
-            m_Pieces[m_CurrentPlayerIndex].Teleport(14, 24);
+            Pieces[m_CurrentPlayerIndex].OnBoard = true;
+            // m_Pieces[m_CurrentPlayerIndex].Teleport(14, 24);
 
             m_CurrentPlayerIndex = 0;
-            currentPiece = m_Pieces[m_CurrentPlayerIndex];
+            currentPiece = Pieces[m_CurrentPlayerIndex];
         }
 
         if (Input.GetKey(KeyCode.UpArrow))
@@ -94,26 +111,26 @@ public class MLAgentTeam : BaseTeam
     private TurnbasedAgent[] m_Agents;
     private Move? m_OurMove;
 
-    public override void InitializeTeam(int teamSize, GameObject prefab)
+    public override void InitializeTeam(int teamSize, TeamConfig config, FlagPiece flag)
     {
-        base.InitializeTeam(teamSize, prefab);
+        base.InitializeTeam(teamSize, config, flag);
         m_Agents = new TurnbasedAgent[teamSize];
 
         for (int i = 0; i < teamSize; i++)
         {
-            m_Agents[i] = m_Pieces[i].gameObject.GetComponent<TurnbasedAgent>();
+            m_Agents[i] = Pieces[i].gameObject.AddComponent<TurnbasedAgent>();
             m_Agents[i].SetCallback((Move agentMove) => { m_OurMove = agentMove; });
         }
     }
 
     public override Move? RequestMove()
     {
-        Piece currentPiece = m_Pieces[m_CurrentPlayerIndex];
+        Piece currentPiece = Pieces[m_CurrentPlayerIndex];
 
         if (!currentPiece.OnBoard)
         {
-            m_Pieces[m_CurrentPlayerIndex].OnBoard = true;
-            m_Pieces[m_CurrentPlayerIndex].Teleport(14, 4);
+            Pieces[m_CurrentPlayerIndex].OnBoard = true;
+            //m_Pieces[m_CurrentPlayerIndex].Teleport(14, 4);
             m_CurrentPlayerIndex = 0;
         }
 
@@ -128,8 +145,8 @@ public class MLAgentTeam : BaseTeam
     {
         TurnbasedAgent agent = m_Agents[m_CurrentPlayerIndex];
 
-        // agent.SetReward(-1.00f);
-        // agent.EndEpisode();
+        agent.SetReward(-1.00f);
+        agent.EndEpisode();
 
     }
 }

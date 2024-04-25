@@ -121,30 +121,25 @@ public static class MapGenerator
 
     static void TryPopulateMap(GenerationConfig config, Cell[,] grid)
     {
-        Texture2D source = config.maps[Random.Range(0, config.maps.Count)];
-        Color[] pixels = source.GetPixels();
+        Texture2D generationTexture = config.PickTexture();
 
-        if (pixels.GetLength(0) != config.width * config.height)
+        if (generationTexture == null ||
+            generationTexture.width != config.width ||
+            generationTexture.height != config.height)
             return;
 
-        for (int x = 0; x < config.width; x++)
+        Color[] pixels = generationTexture.GetPixels();
+
+        for (int i = 0; i < pixels.Length; i++)
         {
-            for (int y = 0; y < config.width; y++)
-            {
-                int index = y * config.width + x;
-                Color color = pixels[index];
+            int x = i / config.height, y = i % config.height;
+            TileRuleset tileType = config.PixelToRuleset(pixels[i]);
 
-                if (Mathf.Approximately(color.a, 0.0f))
-                    continue;
+            if (tileType == null)
+                continue;
 
-                TileRuleset obj = ColorToTileRuleset.Find(config.mapper, color);
-
-                if (obj == null)
-                    continue;
-
-                grid[x, y].CollapseAs(obj);
-                PropagateCell(x, y, grid);
-            }
+            grid[x, y].CollapseAs(tileType);
+            PropagateCell(x, y, grid);
         }
     }
 

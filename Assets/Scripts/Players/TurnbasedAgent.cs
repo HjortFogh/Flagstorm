@@ -2,20 +2,28 @@ using UnityEngine;
 using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
+using Unity.MLAgents.Policies;
 
 public class TurnbasedAgent : Agent
 {
-    private Piece m_Piece;
+    private MovablePiece m_Piece;
 
     private System.Action<Move> m_OnDone;
     private bool m_MakingMove = false;
 
-    const int observationRadius = 2;
+    public int observationRadius = 2;
 
     void Awake()
     {
         if (!TryGetComponent(out m_Piece))
-            gameObject.AddComponent<Piece>();
+            gameObject.AddComponent<MovablePiece>();
+
+        BehaviorParameters bh = gameObject.GetComponent<BehaviorParameters>();
+        bh.BrainParameters.VectorObservationSize = 23;
+
+        bh.BrainParameters.ActionSpec = new ActionSpec { NumContinuousActions = 4 };
+
+        bh.BehaviorName = "TurnbasedAgent";
     }
 
     public override void OnEpisodeBegin()
@@ -26,26 +34,43 @@ public class TurnbasedAgent : Agent
     public override void CollectObservations(VectorSensor sensor)
     {
         // Piece position
-        sensor.AddObservation(m_Piece.x);
-        sensor.AddObservation(m_Piece.y);
+        sensor.AddObservation(m_Piece.X);
+        sensor.AddObservation(m_Piece.Y);
 
         // Team flag position
+        sensor.AddObservation(m_Piece.Team.teamFlag.X);
+        sensor.AddObservation(m_Piece.Team.teamFlag.Y);
+        sensor.AddObservation(m_Piece.Team.teamFlag.AtHome);
 
         // Team-base position
+        sensor.AddObservation(m_Piece.Team.spawnPoint.x);
+        sensor.AddObservation(m_Piece.Team.spawnPoint.y);
 
-        // Point of interest (e.g. EnemyFlag/Wood)
+        // Closest point of interest (e.g. EnemyFlag/Wood)
+        // sensor.AddObservation(ClosestPointOfInterest(this));
+        sensor.AddObservation(14);
+        sensor.AddObservation(22);
 
-        // Frame-board 4x4 around agent
-        // int[,] board = AiUtils.QueryBoard(m_Piece, observationRadius);
+        // Walkable information
+        for (int dx = -observationRadius; dx <= observationRadius; dx++)
+        {
+            for (int dy = -observationRadius; dy <= observationRadius; dy++)
+            {
+                int x = m_Piece.X + dx;
+                int y = m_Piece.Y + dy;
 
-        // for (int i = 0; i < board.GetLength(0); i++)
-        // {
-        //     for (int j = 0; j < board.GetLength(1); j++)
-        //     {
-        //         sensor.AddObservation(board[i, j]);
-        //     }
-        // }
+                sensor.AddObservation(GameState.Instance.Map.IsWalkable(x, y) ? 1 : 0);
 
+                // if (x >= 0 && x < 28 && y >= 0 && y < 28)
+                // {
+                //     // sensor.AddObservation(GameState.Instance.); ...
+                // }
+                // else
+                // {
+                //     sensor.AddObservation(0);
+                // }
+            }
+        }
     }
 
     private int ArgMax(float[] array)
@@ -61,6 +86,11 @@ public class TurnbasedAgent : Agent
             }
         }
         return maxIndex;
+    }
+
+    Vector2 MapVector3ToVector2(Vector3 v)
+    {
+        return new Vector2(v.x, v.z);
     }
 
     public override void OnActionReceived(ActionBuffers actions)
@@ -102,4 +132,5 @@ public class TurnbasedAgent : Agent
             RequestDecision();
         }
     }
+
 }

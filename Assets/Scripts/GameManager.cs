@@ -16,8 +16,6 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        // AiUtils.GenerateThisFrameBoard(m_GameState);
-
         BaseTeam team = m_GameState.CurrentTeam;
         Move? nullableMove = team.RequestMove();
 
@@ -26,13 +24,19 @@ public class GameManager : MonoBehaviour
 
         Move move = (Move)nullableMove;
 
-        if (!m_GameState.ValidateMove(move))
+        (bool canInteract, Piece piece) = m_GameState.CheckCollisions(move);
+
+        if (!canInteract || !m_GameState.ValidateMove(move))
         {
             team.DeclineMove(move);
             return;
         }
 
         move.piece.Move(move.x, move.y);
+
+        if (piece != null)
+            move.piece.Interact(piece);
+
         team.NextPlayer();
         m_GameState.NextTeam();
     }

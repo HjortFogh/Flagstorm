@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 6694057123851100767}
   - component: {fileID: 7752050082363311727}
   - component: {fileID: 4225192224837323739}
-  - component: {fileID: 4465380461870077629}
   - component: {fileID: 8412100849189789301}
   - component: {fileID: 5621214929734418417}
+  - component: {fileID: 1027245634277754555}
   m_Layer: 0
   m_Name: AgentPiece
   m_TagString: Untagged
@@ -86,20 +86,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!114 &4465380461870077629
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8588625347923138522}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 10db0e6e7084cee61abbbfc4d7d64d2e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  x: 0
-  y: 0
 --- !u!114 &8412100849189789301
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -146,3 +132,18 @@ MonoBehaviour:
     maxStep: 0
   hasUpgradedFromAgentParameters: 1
   MaxStep: 0
+  observationRadius: 2
+--- !u!114 &1027245634277754555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8588625347923138522}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 10db0e6e7084cee61abbbfc4d7d64d2e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  x: 0
+  y: 0

@@ -12,6 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 015467abf0e847847b4d4de71ddcf142, type: 3}
   m_Name: Grass Tile
   m_EditorClassIdentifier: 
+  type: {fileID: 11400000, guid: 8eb6d3a5ad2b71c44a2d3c973cfa178c, type: 2}
+  prefab: {fileID: 7283669076764440371, guid: c9faa6c4dc000f045902e0f033d7c723, type: 3}
   weight: 10
   north:
   - {fileID: 11400000}
@@ -25,4 +27,3 @@ MonoBehaviour:
   west:
   - {fileID: 11400000}
   - {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
-  type: {fileID: 11400000, guid: 8eb6d3a5ad2b71c44a2d3c973cfa178c, type: 2}

@@ -18,12 +18,13 @@ MonoBehaviour:
   - {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
   width: 28
   height: 28
-  maps:
-  - {fileID: 2800000, guid: 1eaa011b9cfa5334ca5ec06fdb4445c1, type: 3}
-  mapper:
-  - color: {r: 0, g: 0, b: 0, a: 0}
-    tile: {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
-  - color: {r: 0, g: 1, b: 0, a: 0}
-    tile: {fileID: 11400000, guid: 44d3f02fece25dd4c86a30dc51627cfe, type: 2}
-  - color: {r: 0, g: 0, b: 0.39215687, a: 0}
-    tile: {fileID: 11400000, guid: ca6e720318d34b74abf72b4dbd026565, type: 2}
+  m_GenerationTexture:
+    pairs:
+    - color: {r: 0, g: 0, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: adda9d1f3d2c01b4fab388280ec0ccf9, type: 2}
+    - color: {r: 0, g: 1, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 44d3f02fece25dd4c86a30dc51627cfe, type: 2}
+    - color: {r: 0, g: 0, b: 0.39215687, a: 0}
+      tile: {fileID: 11400000, guid: ca6e720318d34b74abf72b4dbd026565, type: 2}
+    textures:
+    - {fileID: 2800000, guid: 1eaa011b9cfa5334ca5ec06fdb4445c1, type: 3}

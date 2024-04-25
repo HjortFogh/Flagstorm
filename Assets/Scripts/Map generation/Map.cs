@@ -1,23 +1,9 @@
 public class Map
 {
-    // 0, 1
-    // Grass  w  w
-    // Dirt   w  w
-    // Water  n  n
-    // Forest n  w
+    private TileType[,] m_Grid;
 
-    // Forest n  w
-    // Forest.Interact() -> Grass
-
-    // Piece.Attacker, Piece.Defender
-    // (tile type, agent type) -> walkable or not
-
-    // TileType whenInteracted -> Grass
-
-    TileType[,] grid;
-
-    public int Width { get => grid.GetLength(0); }
-    public int Height { get => grid.GetLength(1); }
+    public int Width { get => m_Grid.GetLength(0); }
+    public int Height { get => m_Grid.GetLength(1); }
 
     public static Map Create(TileRuleset[,] rulesetGrid)
     {
@@ -29,29 +15,44 @@ public class Map
     public void SetGrid(TileRuleset[,] rulesetGrid)
     {
         int width = rulesetGrid.GetLength(0), height = rulesetGrid.GetLength(1);
-        grid = new TileType[width, height];
+        m_Grid = new TileType[width, height];
 
         for (int i = 0; i < width * height; i++)
         {
             int x = i / height, y = i % height;
-            grid[x, y] = rulesetGrid[x, y].type;
-            grid[x, y].PlaceInWorld(x, y);
+            m_Grid[x, y] = rulesetGrid[x, y].type;
+
+        }
+
+        for (int i = 0; i < width * height; i++)
+        {
+            int x = i / height, y = i % height;
+            TileType[] surrounding = new TileType[4];
+
+            if (y + 1 < height)
+                surrounding[0] = m_Grid[x, y + 1];
+            if (x + 1 < width)
+                surrounding[1] = m_Grid[x + 1, y];
+            if (x - 1 >= 0)
+                surrounding[3] = m_Grid[x - 1, y];
+            if (y - 1 >= 0)
+                surrounding[2] = m_Grid[x, y - 1];
+
+            rulesetGrid[x, y].PlaceInWorld(x, y, surrounding);
         }
     }
 
-    // public TileType[,] GetGrid() { return grid; }
-
     public TileType AtCoord(int x, int y)
     {
-        if (x < 0 || x >= grid.GetLength(0) || y < 0 || y >= grid.GetLength(1))
+        if (x < 0 || x >= m_Grid.GetLength(0) || y < 0 || y >= m_Grid.GetLength(1))
             return null;
-        return grid[x, y];
+        return m_Grid[x, y];
     }
 
     public bool IsWalkable(int x, int y)
     {
-        if (x < 0 || x >= grid.GetLength(0) || y < 0 || y >= grid.GetLength(1))
+        if (x < 0 || x >= m_Grid.GetLength(0) || y < 0 || y >= m_Grid.GetLength(1))
             return false;
-        return grid[x, y].walkable;
+        return m_Grid[x, y].walkable;
     }
 }

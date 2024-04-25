@@ -1,8 +1,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-class GameState
+public class GameState
 {
+    public static GameState Instance;
+
     private readonly List<BaseTeam> m_Teams;
     private Map m_Map;
     private int m_CurrentTeamIndex = 0;
@@ -18,45 +20,51 @@ class GameState
         m_Map = map;
         m_Teams = new();
 
-        // m_Pieces = new Piece[w, h];
-        // map -> pieces
-
         foreach (TeamConfig config in teamConfigs)
         {
+            GameObject flagObject = new();
+            FlagPiece flagPiece = flagObject.AddComponent<FlagPiece>();
+
+            flagPiece.Teleport(config.flagPosition.x, config.flagPosition.y);
+
+            m_Pieces.Add(flagPiece);
+
             BaseTeam newTeam = config.GetClass();
-            newTeam.InitializeTeam(config.teamSize, config.prefab);
+            newTeam.InitializeTeam(config.teamSize, config, flagPiece);
             m_Teams.Add(newTeam);
+
+            foreach (Piece piece in newTeam.Pieces)
+                m_Pieces.Add(piece);
         }
+
+        Instance = this;
     }
 
-    public void CheckCollisions(Move move)
+    public (bool, Piece) CheckCollisions(Move move)
     {
+        Piece newPiece = null;
         foreach (Piece piece in m_Pieces)
         {
-            if (piece.x == move.piece.x + move.x && piece.y == move.piece.y + move.y)
+            if (piece.X == move.piece.X + move.x && piece.Y == move.piece.Y + move.y)
             {
-                //yay
+                if (!move.piece.CanInteract(piece))
+                    return (false, piece);
+                else
+                    newPiece = piece;
+
+                break;
             }
-
         }
-
-
-
+        return (true, newPiece);
     }
 
     public bool ValidateMove(Move move)
     {
-        int gx = move.x + move.piece.x, gy = move.y + move.piece.y;
+        int gx = move.x + move.piece.X, gy = move.y + move.piece.Y;
         TileType type = m_Map.AtCoord(gx, gy);
 
         if (type == null)
             return false;
-
-        foreach (BaseTeam team in m_Teams)
-        {
-            if (team.BlocksCoord(gx, gy))
-                return false;
-        }
 
         return type.walkable;
     }
