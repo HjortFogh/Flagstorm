@@ -3,153 +3,135 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 
+
 public class PoIAgent : Agent
 {
-    public GameObject goal;
 
-    void FixedUpdate()
-    {
-        if (goal.transform.position == transform.position)
-        {
-            AddReward(1f);
-            EndEpisode();
-        }
-    }
+    public MapTrain map;
+    [SerializeField] private GameObject PointOfInterest;
 
     public override void OnEpisodeBegin()
     {
-        transform.position = new Vector3((int)Random.Range(-10f, 10f), 0f, (int)Random.Range(-10f, 10f));
-        goal.transform.position = new Vector3((int)Random.Range(-10f, 10f), 0f, (int)Random.Range(-10f, 10f));
+        Vector2Int playerPos = map.GetRandomWalkablePosition();
+        transform.localPosition = new Vector3(playerPos.x, 0.5f, playerPos.y);
+        Vector2Int PoIPos = map.GetRandomWalkablePosition();
+        PointOfInterest.transform.localPosition = new Vector3(PoIPos.x, 0.5f, PoIPos.y);
     }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(transform.position.x);
-        sensor.AddObservation(transform.position.z);
+        Vector2Int playerPos = new((int)transform.localPosition.x, (int)transform.localPosition.z);
+        Vector2Int PoIPos = new((int)PointOfInterest.transform.localPosition.x, (int)PointOfInterest.transform.localPosition.z);
 
-        sensor.AddObservation(goal.transform.position.x);
-        sensor.AddObservation(goal.transform.position.z);
+        sensor.AddObservation(playerPos);
+        sensor.AddObservation(PoIPos);
+
+        // bool[] walkableDirections = map.GetWalkableDirections(playerPos);
+        // foreach (bool walkable in walkableDirections)
+        // {
+        //     sensor.AddObservation(walkable);
+        // }
+
+        for (int xOffset = -2; xOffset <= 2; xOffset++)
+        {
+            for (int yOffset = -2; yOffset <= 2; yOffset++)
+            {
+                Vector2Int position = playerPos + new Vector2Int(xOffset, yOffset);
+                bool walkable = map.IsWalkable(position);
+                sensor.AddObservation(walkable ? 1f : 0f);
+            }
+        }
+
+        // //give the entire map as observation
+        // for (int x = 0; x < map.width; x++)
+        // {
+        //     for (int y = 0; y < map.height; y++)
+        //     {
+        //         sensor.AddObservation(map.mapArray[x, y]);
+        //     }
+        // }
+
+
     }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float[] strengths = new float[4];
+        MoveAgent(actions.DiscreteActions[0]);
+        CheckCollisions();
 
-        for (int i = 0; i < 4; i++)
-            strengths[i] = actions.ContinuousActions[i];
+    }
 
-        int maxIndex = ArgMax(strengths);
-        switch (maxIndex)
+    public override void Heuristic(in ActionBuffers actionsOut)
+    {
+        ActionSegment<int> discreteActions = actionsOut.DiscreteActions;
+
+        if (Input.GetKey(KeyCode.W))
+        {
+            discreteActions[0] = 0;
+        }
+        else if (Input.GetKey(KeyCode.D))
+        {
+            discreteActions[0] = 1;
+        }
+        else if (Input.GetKey(KeyCode.S))
+        {
+            discreteActions[0] = 2;
+        }
+        else if (Input.GetKey(KeyCode.A))
+        {
+            discreteActions[0] = 3;
+        }
+        else
+        {
+            discreteActions[0] = 4;
+        }
+    }
+
+    public void MoveAgent(int direction)
+    {
+        Vector2Int dir = Vector2Int.zero;
+
+        switch (direction)
         {
             case 0:
-                transform.position += new Vector3(1f, 0f, 0f);
+                dir += Vector2Int.up;
                 break;
             case 1:
-                transform.position += new Vector3(-1f, 0f, 0f);
+                dir += Vector2Int.right;
                 break;
             case 2:
-                transform.position += new Vector3(0f, 0f, 1f);
+                dir += Vector2Int.down;
                 break;
             case 3:
-                transform.position += new Vector3(0f, 0f, -1f);
+                dir += Vector2Int.left;
                 break;
+            case 4:
+                return;
         }
-    }
 
-    private int ArgMax(float[] array)
-    {
-        float max = array[0];
-        int maxIndex = 0;
-        for (int i = 1; i < array.Length; i++)
+        transform.localPosition += new Vector3(dir.x, 0, dir.y);
+
+        if (!map.IsWalkable(new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.z)))
         {
-            if (array[i] > max)
-            {
-                max = array[i];
-                maxIndex = i;
-            }
+            AddReward(-0.5f);
+            EndEpisode();
         }
-        return maxIndex;
+
+        // if (map.IsWalkable(newPos))
+        // {
+        //     transform.localPosition = new Vector3(newPos.x, 0, newPos.y);
+        // }
+
     }
+
+    private void CheckCollisions()
+    {
+        if (transform.localPosition == PointOfInterest.transform.localPosition)
+        {
+            AddReward(1.0f);
+            EndEpisode();
+        }
+    }
+
+
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// using UnityEngine;
-// using Unity.MLAgents;
-// using Unity.MLAgents.Actuators;
-// using Unity.MLAgents.Sensors;
-// using Unity.MLAgents.Policies;
-
-// public class PoIAgent : Agent
-// {
-//     void Update()
-//     {
-//         AddReward(transform.position.x);
-//     }
-
-//     private int ArgMax(float[] array)
-//     {
-//         float max = array[0];
-//         int maxIndex = 0;
-//         for (int i = 1; i < array.Length; i++)
-//         {
-//             if (array[i] > max)
-//             {
-//                 max = array[i];
-//                 maxIndex = i;
-//             }
-//         }
-//         return maxIndex;
-//     }
-
-//     public override void OnEpisodeBegin()
-//     {
-//         transform.position = Vector3.zero;
-//         // transform.position = new Vector3(Random.Range(-10f, 10f), 0f, Random.Range(-10f, 10f));
-
-//         // Debug.Log("OnEpisodeBegin");
-//         //hver episode ram nyt sted til ens base :)
-//     }
-
-//     public override void CollectObservations(VectorSensor sensor)
-//     {
-//         sensor.AddObservation(transform.position.x);
-//         // sensor.AddObservation(transform.position.z);
-//         // sensor.AddObservation(0);
-//         // sensor.AddObservation(0);
-//     }
-
-//     public override void OnActionReceived(ActionBuffers actions)
-//     {
-//         float dir = actions.ContinuousActions[0];
-//         transform.position += new Vector3(dir, 0f, 0f);
-
-//         // float[] strengths = new float[4];
-
-//         // for (int i = 0; i < 4; i++)
-//         //     strengths[i] = actions.ContinuousActions[i];
-
-//         // Cardinal cardinal = (Cardinal)ArgMax(strengths);
-//         // Vector2Int? direction = Directions.CardinalToMove(cardinal);
-
-//         // if (direction is Vector2Int vec)
-//         //     transform.position += new Vector3(vec.x, 0, vec.y);
-//     }
-
-//     public override void Heuristic(in ActionBuffers actionsOut)
-//     {
-//         // var actions = actionsOut.ContinuousActions;
-//         // Debug.Log("Heuristic");
-//     }
-// }
