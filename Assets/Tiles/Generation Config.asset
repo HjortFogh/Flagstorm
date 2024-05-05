@@ -49,3 +49,6 @@ MonoBehaviour:
       tile: {fileID: 11400000, guid: 5d57af4ae4b48a338a78708f22529619, type: 2}
     textures:
     - {fileID: 2800000, guid: 73f2c355d5526721cac2f17f3be4235b, type: 3}
+    - {fileID: 2800000, guid: 753c40434f44d38139194dd9ff60e0e8, type: 3}
+    - {fileID: 2800000, guid: 212720c928f9aee6581c987557c0e49a, type: 3}
+    - {fileID: 2800000, guid: ca963562b64ff7c188b93e505e2171cd, type: 3}
