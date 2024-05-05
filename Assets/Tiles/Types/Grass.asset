@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58bfa21c9b0d411e6b10e5d9505cd3c2, type: 3}
   m_Name: Grass
   m_EditorClassIdentifier: 
-  identifier: 0
-  prefab: {fileID: 7283669076764440371, guid: c9faa6c4dc000f045902e0f033d7c723, type: 3}
+  identifier: Grass
   walkable: 1

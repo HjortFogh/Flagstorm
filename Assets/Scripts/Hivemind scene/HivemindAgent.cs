@@ -37,10 +37,12 @@ public class HivemindAgent : Agent
         BehaviorParameters parameters = GetComponent<BehaviorParameters>();
 
         parameters.BehaviorName = "Hivemind Agent";
-        // parameters.BrainParameters.VectorObservationSize = mapSize.x * mapSize.y;
-        parameters.BrainParameters.VectorObservationSize = 2;
-        // parameters.BrainParameters.ActionSpec = new ActionSpec(0, new int[] { mapSize.x, mapSize.y });
-        parameters.BrainParameters.ActionSpec = new ActionSpec(mapSize.x * mapSize.y);
+
+        parameters.BrainParameters.VectorObservationSize = mapSize.x * mapSize.y + 2;
+        parameters.BrainParameters.ActionSpec = new ActionSpec(0, new int[] { mapSize.x, mapSize.y });
+
+        // parameters.BrainParameters.VectorObservationSize = 2;
+        // parameters.BrainParameters.ActionSpec = new ActionSpec(mapSize.x * mapSize.y);
     }
 
     private void Update()
@@ -55,26 +57,27 @@ public class HivemindAgent : Agent
     private int CoordinateToIndex(int x, int y) { return x * mapSize.y + y; }
     private Vector2Int IndexToCoordinate(int i) { return new(i / mapSize.y, i % mapSize.y); }
 
-    private IEnumerable<Vector2Int> TopRow(int[] grid)
-    {
-        List<Vector2Int> cells = new();
-        for (int x = 0; x < mapSize.x; x++)
-        {
-            int index = CoordinateToIndex(x, mapSize.y - 1);
-            if (grid[index] == (int)CellType.Walkable)
-                cells.Add(new(x, mapSize.y - 1));
-        }
-        return cells;
-    }
+    // private IEnumerable<Vector2Int> TopRow(int[] grid)
+    // {
+    //     List<Vector2Int> cells = new();
+    //     for (int x = 0; x < mapSize.x; x++)
+    //     {
+    //         int index = CoordinateToIndex(x, mapSize.y - 1);
+    //         if (grid[index] == (int)CellType.Walkable)
+    //             cells.Add(new(x, mapSize.y - 1));
+    //     }
+    //     return cells;
+    // }
 
     private bool CheckIfValidMap(int[] grid, Vector2Int flagPos)
     {
-        foreach (Vector2Int cell in TopRow(grid))
-        {
-            if (AStar.AStarDistance(flagPos, cell, grid, mapSize) != int.MaxValue)
-                return true;
-        }
-        return false;
+        return true;
+        // foreach (Vector2Int cell in TopRow(grid))
+        // {
+        //     if (AStar.AStarDistance(flagPos, cell, grid, mapSize) != int.MaxValue)
+        //         return true;
+        // }
+        // return false;
     }
 
     private int[] GenerateMap()
@@ -106,15 +109,15 @@ public class HivemindAgent : Agent
         if (xBarricade == flagPosition.x && yBarricade == flagPosition.y)
             AddReward(-5f);
 
-        Vector2Int barricade = new(xBarricade, yBarricade);
-        int distance = AStar.AStarDistance(barricade, flagPosition, m_Grid, mapSize);
+        // Vector2Int barricade = new(xBarricade, yBarricade);
+        // int distance = AStar.AStarDistance(barricade, flagPosition, m_Grid, mapSize);
 
         // Distance=1, rewarded=7
         // Distance=8, rewarded=0
         // Distance=20, rewarded=-12
 
-        if (distance != int.MaxValue)
-            AddReward((8 - distance) * 0.5f);
+        // if (distance != int.MaxValue)
+        //     AddReward((8 - distance) * 0.5f);
 
         m_NumTurns--;
         if (m_NumTurns < 0)
@@ -127,64 +130,63 @@ public class HivemindAgent : Agent
         m_NumTurns = numTurnsBeforeReset;
     }
 
-    private Vector2Int GetNearbyFlag()
-    {
-        for (int i = 0; i < 20; i++)
-        {
-            int x = flagPosition.x + Random.Range(-4, 5);
-            int y = flagPosition.y + Random.Range(-4, 5);
+    // private Vector2Int GetNearbyFlag()
+    // {
+    //     for (int i = 0; i < 20; i++)
+    //     {
+    //         int x = flagPosition.x + Random.Range(-4, 5);
+    //         int y = flagPosition.y + Random.Range(-4, 5);
 
-            if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
-                continue;
+    //         if (x < 0 || x >= mapSize.x || y < 0 || y >= mapSize.y)
+    //             continue;
 
-            int cell = m_Grid[CoordinateToIndex(x, y)];
+    //         int cell = m_Grid[CoordinateToIndex(x, y)];
 
-            if (cell == (int)CellType.Walkable)
-                return new(x, y);
-        }
+    //         if (cell == (int)CellType.Walkable)
+    //             return new(x, y);
+    //     }
 
-        return new(Random.Range(0, mapSize.x), Random.Range(0, mapSize.y));
-    }
+    //     return new(Random.Range(0, mapSize.x), Random.Range(0, mapSize.y));
+    // }
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        // foreach (int cell in m_Grid)
-        //     sensor.AddObservation(cell);
-        // sensor.AddObservation(flagPosition.x);
-        // sensor.AddObservation(flagPosition.y);
+        foreach (int cell in m_Grid)
+            sensor.AddObservation(cell);
+        sensor.AddObservation(flagPosition.x);
+        sensor.AddObservation(flagPosition.y);
 
-        Vector2Int pos = GetNearbyFlag();
-        sensor.AddObservation(pos.x);
-        sensor.AddObservation(pos.y);
+        // Vector2Int pos = GetNearbyFlag();
+        // sensor.AddObservation(pos.x);
+        // sensor.AddObservation(pos.y);
     }
 
-    private int ArgMax(float[] array)
-    {
-        float max = array[0];
-        int maxIndex = 0;
-        for (int i = 1; i < array.Length; i++)
-        {
-            if (array[i] > max)
-            {
-                max = array[i];
-                maxIndex = i;
-            }
-        }
-        return maxIndex;
-    }
-
+    // private int ArgMax(float[] array)
+    // {
+    //     float max = array[0];
+    //     int maxIndex = 0;
+    //     for (int i = 1; i < array.Length; i++)
+    //     {
+    //         if (array[i] > max)
+    //         {
+    //             max = array[i];
+    //             maxIndex = i;
+    //         }
+    //     }
+    //     return maxIndex;
+    // }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        // int xCoord = actions.DiscreteActions[0];
-        // int yCoord = actions.DiscreteActions[1];
-        // RecalculateRewards(xCoord, yCoord);
-        // m_Grid[CoordinateToIndex(xCoord, yCoord)] = (int)CellType.Barricade;
+        int xCoord = actions.DiscreteActions[0];
+        int yCoord = actions.DiscreteActions[1];
+        RecalculateRewards(xCoord, yCoord);
+        m_Grid[CoordinateToIndex(xCoord, yCoord)] = (int)CellType.Barricade;
 
-        int index = ArgMax(actions.ContinuousActions.Array);
-        Vector2Int coord = IndexToCoordinate(index);
-        RecalculateRewards(coord.x, coord.y);
-        m_Grid[CoordinateToIndex(coord.x, coord.y)] = (int)CellType.Barricade;
+        // int index = ArgMax(actions.ContinuousActions.Array);
+        // Vector2Int coord = IndexToCoordinate(index);
+        // RecalculateRewards(coord.x, coord.y);
+        // m_Grid[CoordinateToIndex(coord.x, coord.y)] = (int)CellType.Barricade;
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)

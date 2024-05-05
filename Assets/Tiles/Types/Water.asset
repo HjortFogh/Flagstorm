@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58bfa21c9b0d411e6b10e5d9505cd3c2, type: 3}
   m_Name: Water
   m_EditorClassIdentifier: 
-  identifier: 0
-  prefab: {fileID: 3003462278911065189, guid: 0807d339013b0ba4aae4a23c6037592a, type: 3}
+  identifier: Water
   walkable: 0

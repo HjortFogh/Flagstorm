@@ -1,0 +1,51 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 92c9ee78bbbb6c94a872b22da45f393e, type: 3}
+  m_Name: Generation Config
+  m_EditorClassIdentifier: 
+  tileset:
+  - {fileID: 11400000, guid: 6a3ad2c0d7f801f1ca740d3f920fc1a9, type: 2}
+  - {fileID: 11400000, guid: 4cc0fe2778dfd1b0e8cc83d01fec8a1f, type: 2}
+  - {fileID: 11400000, guid: 5a2c29eff438aaba29484e01f626dcda, type: 2}
+  - {fileID: 11400000, guid: 45a94cc34331a01d28e0b43ae47359e7, type: 2}
+  - {fileID: 11400000, guid: 8b693865f35aec2479c9c7036efc86ca, type: 2}
+  - {fileID: 11400000, guid: 84287a67aff82ff4e850101e6571dca2, type: 2}
+  - {fileID: 11400000, guid: 211d539637d2f547ea7cdc5313b6784d, type: 2}
+  - {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+  - {fileID: 11400000, guid: 854e24d5c187e26fd9db616616b9afbf, type: 2}
+  - {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}
+  - {fileID: 11400000, guid: 5d57af4ae4b48a338a78708f22529619, type: 2}
+  - {fileID: 11400000, guid: 89217710cd64e634399889a908cdf393, type: 2}
+  - {fileID: 11400000, guid: 6660f245bc4571a19b08df7b92a478d9, type: 2}
+  - {fileID: 11400000, guid: 376cd6f68f512a3ef80b2f548813e5a3, type: 2}
+  width: 28
+  height: 34
+  m_GenerationTexture:
+    pairs:
+    - color: {r: 0, g: 0, b: 0.39215687, a: 0}
+      tile: {fileID: 11400000, guid: 854e24d5c187e26fd9db616616b9afbf, type: 2}
+    - color: {r: 0, g: 0, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}
+    - color: {r: 0, g: 1, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+    - color: {r: 0, g: 0.39215687, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 84287a67aff82ff4e850101e6571dca2, type: 2}
+    - color: {r: 0, g: 0, b: 1, a: 0}
+      tile: {fileID: 11400000, guid: 376cd6f68f512a3ef80b2f548813e5a3, type: 2}
+    - color: {r: 0, g: 0, b: 0.78431374, a: 0}
+      tile: {fileID: 11400000, guid: 6660f245bc4571a19b08df7b92a478d9, type: 2}
+    - color: {r: 1, g: 0, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 89217710cd64e634399889a908cdf393, type: 2}
+    - color: {r: 0.78431374, g: 0, b: 0, a: 0}
+      tile: {fileID: 11400000, guid: 5d57af4ae4b48a338a78708f22529619, type: 2}
+    textures:
+    - {fileID: 2800000, guid: 73f2c355d5526721cac2f17f3be4235b, type: 3}

@@ -1,12 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MapManager : MonoBehaviour
 {
     public GenerationConfig generationConfig;
 
-    void Start()
+    private void Start()
     {
         MapGenerator.Generate(generationConfig);
     }

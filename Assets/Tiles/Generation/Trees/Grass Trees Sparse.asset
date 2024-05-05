@@ -1,0 +1,50 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 015467abf0e847847b4d4de71ddcf142, type: 3}
+  m_Name: Grass Trees Sparse
+  m_EditorClassIdentifier: 
+  type: {fileID: 11400000, guid: aeca91d686d8d796f8a4027794704965, type: 2}
+  prefab: {fileID: 7859298643855104137, guid: 2c0f980ea1227fd3eaa99922a795912a, type: 3}
+  rotatable: 1
+  weight: 10
+  north:
+  - {fileID: 11400000, guid: 8b693865f35aec2479c9c7036efc86ca, type: 2}
+  - {fileID: 11400000, guid: 4cc0fe2778dfd1b0e8cc83d01fec8a1f, type: 2}
+  - {fileID: 11400000, guid: 5a2c29eff438aaba29484e01f626dcda, type: 2}
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 211d539637d2f547ea7cdc5313b6784d, type: 2}
+  - {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+  - {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}
+  east:
+  - {fileID: 11400000, guid: 8b693865f35aec2479c9c7036efc86ca, type: 2}
+  - {fileID: 11400000, guid: 4cc0fe2778dfd1b0e8cc83d01fec8a1f, type: 2}
+  - {fileID: 11400000, guid: 5a2c29eff438aaba29484e01f626dcda, type: 2}
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 211d539637d2f547ea7cdc5313b6784d, type: 2}
+  - {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+  - {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}
+  south:
+  - {fileID: 11400000, guid: 8b693865f35aec2479c9c7036efc86ca, type: 2}
+  - {fileID: 11400000, guid: 4cc0fe2778dfd1b0e8cc83d01fec8a1f, type: 2}
+  - {fileID: 11400000, guid: 5a2c29eff438aaba29484e01f626dcda, type: 2}
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 211d539637d2f547ea7cdc5313b6784d, type: 2}
+  - {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+  - {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}
+  west:
+  - {fileID: 11400000, guid: 8b693865f35aec2479c9c7036efc86ca, type: 2}
+  - {fileID: 11400000, guid: 4cc0fe2778dfd1b0e8cc83d01fec8a1f, type: 2}
+  - {fileID: 11400000, guid: 5a2c29eff438aaba29484e01f626dcda, type: 2}
+  - {fileID: 11400000}
+  - {fileID: 11400000, guid: 211d539637d2f547ea7cdc5313b6784d, type: 2}
+  - {fileID: 11400000, guid: 04ec7aa3ad6d644e79ea244c888a4346, type: 2}
+  - {fileID: 11400000, guid: 3d0e2b7602803aa7e9d2cc7fe6a39c0c, type: 2}

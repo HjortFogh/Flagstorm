@@ -12,6 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 58bfa21c9b0d411e6b10e5d9505cd3c2, type: 3}
   m_Name: Dirt
   m_EditorClassIdentifier: 
-  identifier: 0
-  prefab: {fileID: 5155487608495232155, guid: 3b1e1d66c5344934ab0f1b2a3d050d0c, type: 3}
-  walkable: 1
+  identifier: Dirt
+  walkable: 0

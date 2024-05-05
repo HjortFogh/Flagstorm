@@ -8,11 +8,10 @@ public static class MapGenerator
     {
         return dir switch
         {
-            Cardinal.North => tile.north,
             Cardinal.East => tile.east,
             Cardinal.South => tile.south,
             Cardinal.West => tile.west,
-            _ => null,
+            _ => tile.north,
         };
     }
 
@@ -74,7 +73,6 @@ public static class MapGenerator
 
     static Vector2Int? MinimalEntropy(Cell[,] grid)
     {
-
         int minEntropy = int.MaxValue;
         List<Vector2Int> minCoords = new();
 
@@ -119,7 +117,7 @@ public static class MapGenerator
             grid[x + 1, y].Propagate(updated.tile, Cardinal.West);
     }
 
-    static void TryPopulateMap(GenerationConfig config, Cell[,] grid)
+    private static void TryPopulateMap(GenerationConfig config, Cell[,] grid)
     {
         Texture2D generationTexture = config.PickTexture();
 
@@ -132,7 +130,7 @@ public static class MapGenerator
 
         for (int i = 0; i < pixels.Length; i++)
         {
-            int x = i / config.height, y = i % config.height;
+            int x = i % config.width, y = i / config.width;
             TileRuleset tileType = config.PixelToRuleset(pixels[i]);
 
             if (tileType == null)
@@ -158,6 +156,7 @@ public static class MapGenerator
         for (int i = 0; i < config.width * config.height; i++)
         {
             Vector2Int? nullableCoord = MinimalEntropy(grid);
+
             if (nullableCoord == null)
                 break;
 
@@ -165,6 +164,8 @@ public static class MapGenerator
 
             grid[coord.x, coord.y].Collapse();
             PropagateCell(coord.x, coord.y, grid);
+
+            Debug.Log("Ping");
         }
 
         TileRuleset[,] rulesets = new TileRuleset[config.width, config.height];

@@ -1,3 +1,5 @@
+using UnityEngine;
+
 public class Map
 {
     private TileType[,] m_Grid;
@@ -20,13 +22,17 @@ public class Map
         for (int i = 0; i < width * height; i++)
         {
             int x = i / height, y = i % height;
-            m_Grid[x, y] = rulesetGrid[x, y].type;
-
+            if (rulesetGrid[x, y] != null)
+                m_Grid[x, y] = rulesetGrid[x, y].type;
         }
 
         for (int i = 0; i < width * height; i++)
         {
             int x = i / height, y = i % height;
+
+            if (rulesetGrid[x, y] == null)
+                continue;
+
             TileType[] surrounding = new TileType[4];
 
             if (y + 1 < height)
