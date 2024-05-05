@@ -48,6 +48,7 @@ public class GameManager : MonoBehaviour
         if (piece != null)
             move.piece.Interact(piece);
 
+        m_GameState.CheckWin();
         team.NextPlayer();
         m_GameState.NextTeam();
 

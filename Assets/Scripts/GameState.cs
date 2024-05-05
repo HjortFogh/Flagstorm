@@ -58,6 +58,20 @@ public class GameState
         return (true, newPiece);
     }
 
+    public void CheckWin()
+    {
+        if (m_Teams[0].BlocksCoord(m_Teams[1].teamConfig.flagPosition.x, m_Teams[1].teamConfig.flagPosition.y))
+        {
+            Debug.Log("Team 1 wins!");
+            Application.Quit();
+        }
+        else if (m_Teams[1].BlocksCoord(m_Teams[0].teamConfig.flagPosition.x, m_Teams[0].teamConfig.flagPosition.y))
+        {
+            Debug.Log("Team 2 wins!");
+            Application.Quit();
+        }
+    }
+
     public bool ValidateMove(Move move)
     {
         int gx = move.x + move.piece.X, gy = move.y + move.piece.Y;

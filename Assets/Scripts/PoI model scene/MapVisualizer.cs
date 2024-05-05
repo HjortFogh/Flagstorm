@@ -29,8 +29,6 @@ public class MapVisualizer : MonoBehaviour
                         cellPrefab = Instantiate(groundPrefab, localPosition, Quaternion.identity, transform);
                         break;
                 }
-
-                // No need to set parent again, as it's already set in the Instantiate call
             }
         }
     }
