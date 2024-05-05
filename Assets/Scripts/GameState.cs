@@ -38,6 +38,9 @@ public class GameState
                 m_Pieces.Add(piece);
         }
 
+        ((MLAgentTeam)m_Teams[0]).SetPoI(new Vector2Int(teamConfigs[1].flagPosition.x, teamConfigs[1].flagPosition.y));
+        //((MLAgentTeam)m_Teams[1]).SetPoI(new Vector2Int(teamConfigs[0].flagPosition.x, teamConfigs[0].flagPosition.y));
+
         Instance = this;
     }
 

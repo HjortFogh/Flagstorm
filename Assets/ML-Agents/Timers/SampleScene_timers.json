@@ -1,1 +1,32 @@
-{"count":1,"self":50.6997952,"total":50.918369,"children":{"InitializeActuators":{"count":6,"self":0.0014449999999999999,"total":0.0014449999999999999,"children":null},"InitializeSensors":{"count":6,"self":0.0015099999999999998,"total":0.0015099999999999998,"children":null},"AgentSendState":{"count":2518,"self":0.014787,"total":0.031598,"children":{"CollectObservations":{"count":28,"self":0.001421,"total":0.001421,"children":null},"WriteActionMask":{"count":28,"self":0.000334,"total":0.000334,"children":null},"RequestDecision":{"count":28,"self":0.015056,"total":0.015056,"children":null}}},"DecideAction":{"count":2518,"self":0.178483,"total":0.178483,"children":null},"AgentAct":{"count":2518,"self":0.004952,"total":0.004952,"children":null}},"gauges":{},"metadata":{"timer_format_version":"0.1.0","start_time_seconds":"1714937409","unity_version":"2022.3.10f1","command_line_arguments":"\/home\/alexa\/Unity\/Hub\/Editor\/2022.3.10f1\/Editor\/Unity -projectpath \/home\/alexa\/Unity Projects\/Flagstorm -useHub -hubIPC -cloudEnvironment production -licensingIpc LicenseClient-alexa -hubSessionId e4ac8d4e-a01f-4aa5-975a-6cc234a873e6 -accessToken uWHNcMcoZUl3STfPrnEqjz-0Ll7i78g9LZb0vGrC1Eo005f","communication_protocol_version":"1.5.0","com.unity.ml-agents_version":"2.0.1","scene_name":"SampleScene","end_time_seconds":"1714937460"}}
+{
+    "count": 1,
+    "self": 50.6997952,
+    "total": 50.918369,
+    "children": {
+        "InitializeActuators": { "count": 6, "self": 0.0014449999999999999, "total": 0.0014449999999999999, "children": null },
+        "InitializeSensors": { "count": 6, "self": 0.0015099999999999998, "total": 0.0015099999999999998, "children": null },
+        "AgentSendState": {
+            "count": 2518,
+            "self": 0.014787,
+            "total": 0.031598,
+            "children": {
+                "CollectObservations": { "count": 28, "self": 0.001421, "total": 0.001421, "children": null },
+                "WriteActionMask": { "count": 28, "self": 0.000334, "total": 0.000334, "children": null },
+                "RequestDecision": { "count": 28, "self": 0.015056, "total": 0.015056, "children": null }
+            }
+        },
+        "DecideAction": { "count": 2518, "self": 0.178483, "total": 0.178483, "children": null },
+        "AgentAct": { "count": 2518, "self": 0.004952, "total": 0.004952, "children": null }
+    },
+    "gauges": {},
+    "metadata": {
+        "timer_format_version": "0.1.0",
+        "start_time_seconds": "1714937409",
+        "unity_version": "2022.3.10f1",
+        "command_line_arguments": "/home/alexa/Unity/Hub/Editor/2022.3.10f1/Editor/Unity -projectpath /home/alexa/Unity Projects/Flagstorm -useHub -hubIPC -cloudEnvironment production -licensingIpc LicenseClient-alexa -hubSessionId e4ac8d4e-a01f-4aa5-975a-6cc234a873e6 -accessToken uWHNcMcoZUl3STfPrnEqjz-0Ll7i78g9LZb0vGrC1Eo005f",
+        "communication_protocol_version": "1.5.0",
+        "com.unity.ml-agents_version": "2.0.1",
+        "scene_name": "SampleScene",
+        "end_time_seconds": "1714937460"
+    }
+}
