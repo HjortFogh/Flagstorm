@@ -53,7 +53,7 @@ public class GameManager : MonoBehaviour
         m_GameState.NextTeam();
 
         // Vector3 piecePosition = m_GameState.CurrentTeam.CurrentPiece.transform.position;
-        // SpotlightPrefab.transform.position = piecePosition + Vector3.up * 10f;
+        // SpotlightPrefab.transform.position = piecePosition + Vector3.up * 25f;
 
         m_CurrentTime = 0f;
     }

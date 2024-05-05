@@ -132,6 +132,12 @@ public class MLAgentTeam : BaseTeam
         }
     }
 
+    public void SetPoI(Vector2Int pos)
+    {
+        foreach (TurnbasedAgent agent in m_Agents)
+            agent.pointOfInterest = pos;
+    }
+
     public override Move? RequestMove()
     {
         Piece currentPiece = Pieces[m_CurrentPlayerIndex];
