@@ -260,7 +260,7 @@ MonoBehaviour:
     flagPosition: {x: 5, y: 4}
   agentBrain: {fileID: 5022602860645237092, guid: a727fba468999cd469146e326d187e71, type: 3}
   SpotlightPrefab: {fileID: 2016965635143647803}
-  inputDelayTime: 0.4
+  inputDelayTime: 0.2
 --- !u!4 &713260933
 Transform:
   m_ObjectHideFlags: 0
