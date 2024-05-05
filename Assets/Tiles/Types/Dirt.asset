@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Dirt
   m_EditorClassIdentifier: 
   identifier: Dirt
-  walkable: 0
+  walkable: 1

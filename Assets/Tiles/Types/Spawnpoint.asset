@@ -13,4 +13,4 @@ MonoBehaviour:
   m_Name: Spawnpoint
   m_EditorClassIdentifier: 
   identifier: Spawnpoint
-  walkable: 0
+  walkable: 1
