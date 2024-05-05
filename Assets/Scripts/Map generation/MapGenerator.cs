@@ -164,8 +164,6 @@ public static class MapGenerator
 
             grid[coord.x, coord.y].Collapse();
             PropagateCell(coord.x, coord.y, grid);
-
-            Debug.Log("Ping");
         }
 
         TileRuleset[,] rulesets = new TileRuleset[config.width, config.height];
