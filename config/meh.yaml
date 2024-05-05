@@ -1,5 +1,5 @@
 behaviors:
-    PoI:
+    v3:
         trainer_type: ppo
         hyperparameters:
             batch_size: 10
