@@ -30,6 +30,8 @@ public abstract class BaseTeam
     public Vector2Int spawnPoint;
     public TeamConfig teamConfig;
 
+    public MovablePiece CurrentPiece { get { return Pieces[m_CurrentPlayerIndex]; } }
+
     protected int m_CurrentPlayerIndex;
 
     public virtual bool BlocksCoord(int xGlobal, int yGlobal)
@@ -75,7 +77,14 @@ public abstract class BaseTeam
         m_CurrentPlayerIndex = (m_CurrentPlayerIndex + 1) % Pieces.GetLength(0);
     }
 
-    public virtual void DeclineMove(Move move) { }
+    public virtual void DeclineMove(Move move)
+    {
+        if (CurrentPiece.IsBlocked())
+        {
+            NextPlayer();
+            GameState.Instance.NextTeam();
+        }
+    }
 }
 
 public class PlayerTeam : BaseTeam
@@ -139,17 +148,5 @@ public class MLAgentTeam : BaseTeam
         m_OurMove = null;
 
         return currentMove;
-    }
-
-    public override void DeclineMove(Move move)
-    {
-        TurnbasedAgent agent = m_Agents[m_CurrentPlayerIndex];
-
-        if (agent.IsBlocked())
-        {
-            GameState.Instance.NextTeam();
-        }
-
-
     }
 }

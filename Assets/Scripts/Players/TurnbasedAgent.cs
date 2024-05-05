@@ -67,8 +67,9 @@ public class TurnbasedAgent : Agent
             {
                 Vector2Int position = new Vector2Int(m_Piece.X, m_Piece.Y) + new Vector2Int(xOffset, yOffset);
                 bool walkable = GameState.Instance.Map.IsWalkable(position.x, position.y);
-                bool canInteract = m_Piece.Team.BlocksCoord(position.x, position.y);
-                sensor.AddObservation(canInteract && walkable ? 1f : 0f);
+                bool coordBlocked = m_Piece.Team.BlocksCoord(position.x, position.y);
+                // 0 = non-walkable, 1 = walkable
+                sensor.AddObservation((!coordBlocked && walkable) ? 1f : 0f);
             }
         }
     }
@@ -136,18 +137,4 @@ public class TurnbasedAgent : Agent
             RequestDecision();
         }
     }
-
-    /// <summary>
-    /// Checks if the agent is blocked. (i.e. can't move in any direction)
-    /// </summary>
-    public bool IsBlocked()
-    {
-        bool isNorthBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X, m_Piece.Y + 1) && m_Piece.Team.BlocksCoord(m_Piece.X, m_Piece.Y + 1);
-        bool isEastBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X + 1, m_Piece.Y) && m_Piece.Team.BlocksCoord(m_Piece.X + 1, m_Piece.Y);
-        bool isSouthBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X, m_Piece.Y - 1) && m_Piece.Team.BlocksCoord(m_Piece.X, m_Piece.Y - 1);
-        bool isWestBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X - 1, m_Piece.Y) && m_Piece.Team.BlocksCoord(m_Piece.X - 1, m_Piece.Y);
-
-        return isNorthBlocked && isEastBlocked && isSouthBlocked && isWestBlocked;
-    }
-
 }

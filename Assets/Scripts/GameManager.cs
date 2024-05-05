@@ -7,6 +7,8 @@ public class GameManager : MonoBehaviour
     public List<TeamConfig> teamConfigs;
     public Unity.Barracuda.NNModel agentBrain;
 
+    public GameObject SpotlightPrefab;
+
     private GameState m_GameState;
 
     void Start()
@@ -41,5 +43,8 @@ public class GameManager : MonoBehaviour
 
         team.NextPlayer();
         m_GameState.NextTeam();
+
+        Vector3 piecePosition = m_GameState.CurrentTeam.CurrentPiece.transform.position;
+        SpotlightPrefab.transform.position = piecePosition + Vector3.up * 2f;
     }
 }

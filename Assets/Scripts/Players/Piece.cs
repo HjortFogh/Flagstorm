@@ -112,6 +112,19 @@ public abstract class TeamPiece : Piece
     {
         Team = team;
     }
+
+    /// <summary>
+    /// Checks if the agent is blocked. (i.e. can't move in any direction)
+    /// </summary>
+    public bool IsBlocked()
+    {
+        bool isNorthBlocked = !GameState.Instance.Map.IsWalkable(X, Y + 1) || Team.BlocksCoord(X, Y + 1);
+        bool isEastBlocked = !GameState.Instance.Map.IsWalkable(X + 1, Y) || Team.BlocksCoord(X + 1, Y);
+        bool isSouthBlocked = !GameState.Instance.Map.IsWalkable(X, Y - 1) || Team.BlocksCoord(X, Y - 1);
+        bool isWestBlocked = !GameState.Instance.Map.IsWalkable(X - 1, Y) || Team.BlocksCoord(X - 1, Y);
+
+        return isNorthBlocked && isEastBlocked && isSouthBlocked && isWestBlocked;
+    }
 }
 
 public class FlagPiece : TeamPiece
