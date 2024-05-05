@@ -53,13 +53,11 @@ public class TurnbasedAgent : Agent
             {
                 Vector2Int position = new Vector2Int(m_Piece.X, m_Piece.Y) + new Vector2Int(xOffset, yOffset);
                 bool walkable = GameState.Instance.Map.IsWalkable(position.x, position.y);
-                bool canInteract = GameState.Instance.CheckCollisions(new Move(m_Piece, xOffset, yOffset)).Item1;
+                bool canInteract = m_Piece.Team.BlocksCoord(position.x, position.y);
                 sensor.AddObservation(canInteract && walkable ? 1f : 0f);
             }
         }
     }
-
-
 
     public override void OnActionReceived(ActionBuffers actions)
     {
@@ -86,20 +84,6 @@ public class TurnbasedAgent : Agent
 
         m_MakingMove = false;
         m_OnDone(new Move(m_Piece, dir.x, dir.y));
-
-        // float[] strengths = new float[4];
-
-        // for (int i = 0; i < 4; i++)
-        //     strengths[i] = actions.ContinuousActions[i];
-
-        // Cardinal cardinal = (Cardinal)ArgMax(strengths);
-        // Vector2Int? direction = Directions.CardinalToMove(cardinal);
-
-        // if (direction == null)
-        //     return;
-
-        // m_MakingMove = false;
-        // m_OnDone(new Move(m_Piece, ((Vector2Int)direction).x, ((Vector2Int)direction).y));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
@@ -123,6 +107,16 @@ public class TurnbasedAgent : Agent
             m_MakingMove = true;
             RequestDecision();
         }
+    }
+
+    public bool IsBlocked()
+    {
+        bool isNorthBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X, m_Piece.Y + 1) && m_Piece.Team.BlocksCoord(m_Piece.X, m_Piece.Y + 1);
+        bool isEastBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X + 1, m_Piece.Y) && m_Piece.Team.BlocksCoord(m_Piece.X + 1, m_Piece.Y);
+        bool isSouthBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X, m_Piece.Y - 1) && m_Piece.Team.BlocksCoord(m_Piece.X, m_Piece.Y - 1);
+        bool isWestBlocked = GameState.Instance.Map.IsWalkable(m_Piece.X - 1, m_Piece.Y) && m_Piece.Team.BlocksCoord(m_Piece.X - 1, m_Piece.Y);
+
+        return isNorthBlocked && isEastBlocked && isSouthBlocked && isWestBlocked;
     }
 
 }

@@ -145,8 +145,11 @@ public class MLAgentTeam : BaseTeam
     {
         TurnbasedAgent agent = m_Agents[m_CurrentPlayerIndex];
 
-        agent.SetReward(-1.00f);
-        agent.EndEpisode();
+        if (agent.IsBlocked())
+        {
+            GameState.Instance.NextTeam();
+        }
+
 
     }
 }
