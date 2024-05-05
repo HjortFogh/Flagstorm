@@ -5,6 +5,7 @@ public class GameManager : MonoBehaviour
 {
     public GenerationConfig generationConfig;
     public List<TeamConfig> teamConfigs;
+    public Unity.Barracuda.NNModel agentBrain;
 
     private GameState m_GameState;
 
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
     {
         Map map = MapGenerator.Generate(generationConfig);
         m_GameState = new(map, teamConfigs);
+        m_GameState.SetAgentBrain(agentBrain);
     }
 
     void Update()

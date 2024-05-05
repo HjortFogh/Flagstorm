@@ -6,6 +6,7 @@ public class GameState
     public static GameState Instance;
 
     private readonly List<BaseTeam> m_Teams;
+    public Unity.Barracuda.NNModel m_AgentBrain;
     private Map m_Map;
     private int m_CurrentTeamIndex = 0;
 
@@ -51,7 +52,6 @@ public class GameState
                     return (false, piece);
                 else
                     newPiece = piece;
-
                 break;
             }
         }
@@ -72,5 +72,10 @@ public class GameState
     public void NextTeam()
     {
         m_CurrentTeamIndex = (m_CurrentTeamIndex + 1) % m_Teams.Count;
+    }
+
+    public void SetAgentBrain(Unity.Barracuda.NNModel brain)
+    {
+        m_AgentBrain = brain;
     }
 }

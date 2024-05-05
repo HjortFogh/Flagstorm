@@ -3,6 +3,9 @@ using Unity.MLAgents;
 using Unity.MLAgents.Actuators;
 using Unity.MLAgents.Sensors;
 using Unity.MLAgents.Policies;
+using Unity.Barracuda;
+using Unity.Barracuda.ONNX;
+using System.IO;
 
 public class TurnbasedAgent : Agent
 {
@@ -12,6 +15,8 @@ public class TurnbasedAgent : Agent
     private bool m_MakingMove = false;
 
     public int observationRadius = 2;
+    public Vector2Int pointOfInterest = Vector2Int.zero;
+
 
     void Awake()
     {
@@ -19,11 +24,11 @@ public class TurnbasedAgent : Agent
             gameObject.AddComponent<MovablePiece>();
 
         BehaviorParameters bh = gameObject.GetComponent<BehaviorParameters>();
-        bh.BrainParameters.VectorObservationSize = 23;
-
-        bh.BrainParameters.ActionSpec = new ActionSpec { NumContinuousActions = 4 };
-
+        bh.BrainParameters.VectorObservationSize = 29;
+        bh.BrainParameters.ActionSpec = ActionSpec.MakeDiscrete(new int[] { 4 });
         bh.BehaviorName = "TurnbasedAgent";
+
+        bh.Model = GameState.Instance.m_AgentBrain;
     }
 
     public override void OnEpisodeBegin()
@@ -37,77 +42,64 @@ public class TurnbasedAgent : Agent
         sensor.AddObservation(m_Piece.X);
         sensor.AddObservation(m_Piece.Y);
 
-        // Team flag position
-        sensor.AddObservation(m_Piece.Team.teamFlag.X);
-        sensor.AddObservation(m_Piece.Team.teamFlag.Y);
-        sensor.AddObservation(m_Piece.Team.teamFlag.AtHome);
 
-        // Team-base position
-        sensor.AddObservation(m_Piece.Team.spawnPoint.x);
-        sensor.AddObservation(m_Piece.Team.spawnPoint.y);
+        // Point of interest position
+        sensor.AddObservation(pointOfInterest.x);
+        sensor.AddObservation(pointOfInterest.y);
 
-        // Closest point of interest (e.g. EnemyFlag/Wood)
-        // sensor.AddObservation(ClosestPointOfInterest(this));
-        sensor.AddObservation(14);
-        sensor.AddObservation(22);
-
-        // Walkable information
-        for (int dx = -observationRadius; dx <= observationRadius; dx++)
+        for (int xOffset = -2; xOffset <= 2; xOffset++)
         {
-            for (int dy = -observationRadius; dy <= observationRadius; dy++)
+            for (int yOffset = -2; yOffset <= 2; yOffset++)
             {
-                int x = m_Piece.X + dx;
-                int y = m_Piece.Y + dy;
-
-                sensor.AddObservation(GameState.Instance.Map.IsWalkable(x, y) ? 1 : 0);
-
-                // if (x >= 0 && x < 28 && y >= 0 && y < 28)
-                // {
-                //     // sensor.AddObservation(GameState.Instance.); ...
-                // }
-                // else
-                // {
-                //     sensor.AddObservation(0);
-                // }
+                Vector2Int position = new Vector2Int(m_Piece.X, m_Piece.Y) + new Vector2Int(xOffset, yOffset);
+                bool walkable = GameState.Instance.Map.IsWalkable(position.x, position.y);
+                bool canInteract = GameState.Instance.CheckCollisions(new Move(m_Piece, xOffset, yOffset)).Item1;
+                sensor.AddObservation(canInteract && walkable ? 1f : 0f);
             }
         }
     }
 
-    private int ArgMax(float[] array)
-    {
-        float max = array[0];
-        int maxIndex = 0;
-        for (int i = 1; i < array.Length; i++)
-        {
-            if (array[i] > max)
-            {
-                max = array[i];
-                maxIndex = i;
-            }
-        }
-        return maxIndex;
-    }
 
-    Vector2 MapVector3ToVector2(Vector3 v)
-    {
-        return new Vector2(v.x, v.z);
-    }
 
     public override void OnActionReceived(ActionBuffers actions)
     {
-        float[] strengths = new float[4];
 
-        for (int i = 0; i < 4; i++)
-            strengths[i] = actions.ContinuousActions[i];
+        Vector2Int dir = Vector2Int.zero;
 
-        Cardinal cardinal = (Cardinal)ArgMax(strengths);
-        Vector2Int? direction = Directions.CardinalToMove(cardinal);
-
-        if (direction == null)
-            return;
+        switch (actions.DiscreteActions[0])
+        {
+            case 0:
+                dir += Vector2Int.up;
+                break;
+            case 1:
+                dir += Vector2Int.right;
+                break;
+            case 2:
+                dir += Vector2Int.down;
+                break;
+            case 3:
+                dir += Vector2Int.left;
+                break;
+            case 4:
+                return;
+        }
 
         m_MakingMove = false;
-        m_OnDone(new Move(m_Piece, ((Vector2Int)direction).x, ((Vector2Int)direction).y));
+        m_OnDone(new Move(m_Piece, dir.x, dir.y));
+
+        // float[] strengths = new float[4];
+
+        // for (int i = 0; i < 4; i++)
+        //     strengths[i] = actions.ContinuousActions[i];
+
+        // Cardinal cardinal = (Cardinal)ArgMax(strengths);
+        // Vector2Int? direction = Directions.CardinalToMove(cardinal);
+
+        // if (direction == null)
+        //     return;
+
+        // m_MakingMove = false;
+        // m_OnDone(new Move(m_Piece, ((Vector2Int)direction).x, ((Vector2Int)direction).y));
     }
 
     public override void Heuristic(in ActionBuffers actionsOut)
