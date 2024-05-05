@@ -26,7 +26,7 @@ public class MapTrain : MonoBehaviour
             }
         }
 
-        for (int i = 0; i < 200; i++)
+        for (int i = 0; i < 100; i++)
         {
             int x = Random.Range(0, width);
             int y = Random.Range(0, height);
