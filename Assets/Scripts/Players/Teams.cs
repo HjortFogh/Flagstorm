@@ -79,11 +79,11 @@ public abstract class BaseTeam
 
     public virtual void DeclineMove(Move move)
     {
-        if (CurrentPiece.IsBlocked())
-        {
-            NextPlayer();
-            GameState.Instance.NextTeam();
-        }
+        // if (CurrentPiece.IsBlocked())
+        // {
+        NextPlayer();
+        GameState.Instance.NextTeam();
+        // }
     }
 }
 

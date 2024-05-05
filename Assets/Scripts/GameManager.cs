@@ -8,18 +8,25 @@ public class GameManager : MonoBehaviour
     public Unity.Barracuda.NNModel agentBrain;
 
     public GameObject SpotlightPrefab;
+    public float inputDelayTime = 0.8f;
+    private float m_CurrentTime = 0.0f;
 
     private GameState m_GameState;
 
-    void Start()
+    private void Start()
     {
         Map map = MapGenerator.Generate(generationConfig);
         m_GameState = new(map, teamConfigs);
         m_GameState.SetAgentBrain(agentBrain);
     }
 
-    void Update()
+    private void Update()
     {
+        m_CurrentTime += Time.deltaTime;
+
+        if (m_CurrentTime < inputDelayTime)
+            return;
+
         BaseTeam team = m_GameState.CurrentTeam;
         Move? nullableMove = team.RequestMove();
 
@@ -44,7 +51,9 @@ public class GameManager : MonoBehaviour
         team.NextPlayer();
         m_GameState.NextTeam();
 
-        Vector3 piecePosition = m_GameState.CurrentTeam.CurrentPiece.transform.position;
-        SpotlightPrefab.transform.position = piecePosition + Vector3.up * 2f;
+        // Vector3 piecePosition = m_GameState.CurrentTeam.CurrentPiece.transform.position;
+        // SpotlightPrefab.transform.position = piecePosition + Vector3.up * 10f;
+
+        m_CurrentTime = 0f;
     }
 }

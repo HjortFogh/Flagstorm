@@ -57,8 +57,10 @@ public class TurnbasedAgent : Agent
 
 
         // Point of interest position
-        sensor.AddObservation(pointOfInterest.x);
-        sensor.AddObservation(pointOfInterest.y);
+        // sensor.AddObservation(pointOfInterest.x);
+        // sensor.AddObservation(pointOfInterest.y);
+        sensor.AddObservation(6);
+        sensor.AddObservation(16);
 
         // Observe what is walkable around the agent
         for (int xOffset = -2; xOffset <= 2; xOffset++)
