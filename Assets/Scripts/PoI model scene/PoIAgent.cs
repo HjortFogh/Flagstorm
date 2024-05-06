@@ -10,6 +10,9 @@ public class PoIAgent : Agent
     public MapTrain map;
     [SerializeField] private GameObject PointOfInterest;
 
+    private int totalAttemps;
+    private int successfulAttemps;
+
     public override void OnEpisodeBegin()
     {
         Vector2Int playerPos = map.GetRandomWalkablePosition();
@@ -114,6 +117,9 @@ public class PoIAgent : Agent
         if (!map.IsWalkable(new Vector2Int((int)transform.localPosition.x, (int)transform.localPosition.z)))
         {
             AddReward(-0.5f);
+            totalAttemps++;
+            Debug.Log($"Total attemps: {totalAttemps}, Successful attemps: {successfulAttemps}");
+            Debug.Log("Success rate: " + (float)successfulAttemps / totalAttemps * 100 + "%");
             EndEpisode();
         }
 
@@ -129,6 +135,10 @@ public class PoIAgent : Agent
         if (transform.localPosition == PointOfInterest.transform.localPosition)
         {
             AddReward(1.0f);
+            successfulAttemps++;
+            totalAttemps++;
+            Debug.Log($"Total attemps: {totalAttemps}, Successful attemps: {successfulAttemps}");
+            Debug.Log("Success rate: " + (float)successfulAttemps / totalAttemps * 100 + "%");
             EndEpisode();
         }
     }

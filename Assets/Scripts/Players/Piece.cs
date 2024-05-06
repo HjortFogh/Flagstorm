@@ -15,7 +15,9 @@ public struct Move
     }
 }
 
-
+/// <summary>
+/// Base class for all pieces in the game.
+/// </summary>
 public abstract class Piece : MonoBehaviour
 {
     protected int m_X, m_Y;
@@ -86,6 +88,9 @@ public abstract class Piece : MonoBehaviour
     public virtual void Interact(Piece other) { }
 }
 
+/// <summary>
+/// Base class for all pieces that can be placed on the board.
+/// </summary>
 public class ForestPiece : Piece
 {
     public override void LoadMesh()
@@ -95,6 +100,9 @@ public class ForestPiece : Piece
     }
 }
 
+/// <summary>
+/// Base class for all pieces that can be placed on the board.
+/// </summary>
 public class BarricadePiece : Piece
 {
     public override void LoadMesh()
@@ -104,6 +112,9 @@ public class BarricadePiece : Piece
     }
 }
 
+/// <summary>
+/// TeamPiece is a piece that belongs to a team.
+/// </summary>
 public abstract class TeamPiece : Piece
 {
     public BaseTeam Team;
@@ -127,6 +138,9 @@ public abstract class TeamPiece : Piece
     }
 }
 
+/// <summary>
+/// FlagPiece is a piece that represents the flag of a team
+/// </summary>
 public class FlagPiece : TeamPiece
 {
     public bool AtHome
@@ -142,6 +156,10 @@ public class FlagPiece : TeamPiece
     }
 }
 
+
+/// <summary>
+/// MovablePiece is a piece that can move around the board.
+/// </summary>
 public abstract class MovablePiece : TeamPiece
 {
     protected Piece m_Inventory = null;
@@ -161,6 +179,9 @@ public abstract class MovablePiece : TeamPiece
     }
 }
 
+/// <summary>
+/// DefenderPiece is a piece that can gather resources.
+/// </summary>
 public class DefenderPiece : MovablePiece
 {
     public override void LoadMesh()
@@ -188,6 +209,9 @@ public class DefenderPiece : MovablePiece
     }
 }
 
+/// <summary>
+/// AttackerPiece is a piece that can attack other pieces and interact with flags.
+/// </summary>
 public class AttackerPiece : MovablePiece
 {
     public override void LoadMesh()
