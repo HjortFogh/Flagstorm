@@ -22,6 +22,9 @@ public class TeamConfig
     }
 }
 
+/// <summary>
+/// Base class for all teams in the game.
+/// </summary>
 public abstract class BaseTeam
 {
     public MovablePiece[] Pieces;
@@ -87,8 +90,15 @@ public abstract class BaseTeam
     }
 }
 
+/// <summary>
+/// PlayerTeam is a team controlled by the player. Inherit from BaseTeam.
+/// </summary>
 public class PlayerTeam : BaseTeam
 {
+    /// <summary>
+    /// Request a move from the player by checking the input keys.
+    /// </summary>
+    /// <returns></returns>
     public override Move? RequestMove()
     {
         Piece currentPiece = Pieces[m_CurrentPlayerIndex];
@@ -115,6 +125,9 @@ public class PlayerTeam : BaseTeam
     }
 }
 
+/// <summary>
+/// MLAgentTeam is a team controlled by the ML Agent. Inherits from BaseTeam.
+/// </summary>
 public class MLAgentTeam : BaseTeam
 {
     private TurnbasedAgent[] m_Agents;

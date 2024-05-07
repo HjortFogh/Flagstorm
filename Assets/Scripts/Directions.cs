@@ -1,14 +1,26 @@
 using UnityEngine;
 
+/// <summary>
+/// Enum to represent the cardinal directions
+/// </summary>
 public enum Cardinal
 {
     North = 0, East, South, West
 };
 
+/// <summary>
+/// Static class to handle directions
+/// </summary>
 public static class Directions
 {
+    /// <summary>
+    /// Returns the opposite cardinal direction of the given one
+    /// </summary>
     public static Cardinal OppositeCardinal(Cardinal dir) { return (Cardinal)(((int)dir + 2) % 4); }
 
+    /// <summary>
+    /// Returns which direction to move in based on the given cardinal direction
+    /// </summary>
     public static Vector2Int CardinalToMove(Cardinal cardinal)
     {
         return cardinal switch
@@ -20,6 +32,9 @@ public static class Directions
         };
     }
 
+    /// <summary>
+    /// Maps a cardinal direction to a rotation
+    /// </summary>
     public static Quaternion CardinalToRotation(Cardinal cardinal)
     {
         Vector2Int move2D = CardinalToMove(cardinal);
