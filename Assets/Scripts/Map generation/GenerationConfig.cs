@@ -1,6 +1,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Describes which colors should map to which tiles
+/// </summary>
 [System.Serializable]
 public struct ColorRulesetPair
 {
@@ -8,6 +11,10 @@ public struct ColorRulesetPair
     public TileRuleset tile;
 }
 
+
+/// <summary>
+/// Holds a corresponding list of 2d textures and a list of Color/Ruleset-pairs
+/// </summary>
 [System.Serializable]
 public class GenerationTexture
 {
@@ -15,6 +22,9 @@ public class GenerationTexture
     public List<Texture2D> textures;
 }
 
+/// <summary>
+/// A config for generating maps
+/// </summary>
 [CreateAssetMenu(fileName = "New Generation Config", menuName = "Capture the Flag/Generation Config")]
 public class GenerationConfig : ScriptableObject
 {
@@ -23,6 +33,9 @@ public class GenerationConfig : ScriptableObject
     [SerializeField]
     private GenerationTexture m_GenerationTexture;
 
+    /// <summary>
+    /// Picks a random textures from the list of textures in `m_GenerationTexture`
+    /// </summary>
     public Texture2D PickTexture()
     {
         if (m_GenerationTexture.textures.Count == 0)
@@ -32,6 +45,9 @@ public class GenerationConfig : ScriptableObject
         return m_GenerationTexture.textures[index];
     }
 
+    /// <summary>
+    /// Maps a pixel color to a ruleset
+    /// </summary>
     public TileRuleset PixelToRuleset(Color pixel)
     {
         if (!Mathf.Approximately(pixel.a, 1.0f))

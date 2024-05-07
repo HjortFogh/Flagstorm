@@ -2,8 +2,14 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// A static class for generating maps
+/// </summary>
 public static class MapGenerator
 {
+    /// <summary>
+    /// Grabs the correct edge for use by WFC, given a tile ruleset and a direction
+    /// </summary>
     static List<TileRuleset> GrabEdge(TileRuleset tile, Cardinal dir)
     {
         return dir switch
@@ -15,6 +21,9 @@ public static class MapGenerator
         };
     }
 
+    /// <summary>
+    /// Check if the connecting sides of two ruleset matches, i.e. if they can be placed next to each other
+    /// </summary>
     static bool Matches(TileRuleset from, TileRuleset to, Cardinal dir)
     {
         List<TileRuleset> fromEdge = GrabEdge(from, dir);
@@ -23,27 +32,42 @@ public static class MapGenerator
         return fromEdge.Contains(to) && toEdge.Contains(from);
     }
 
+    /// <summary>
+    /// A class representing a cell in the grid
+    /// </summary>
     class Cell
     {
         List<TileRuleset> options;
         public TileRuleset tile = null;
 
+        /// <summary>
+        /// Create a new cell with max entropy
+        /// </summary>
         public Cell(List<TileRuleset> _options)
         {
             options = _options;
         }
 
+        /// <summary>
+        /// Calculate the entropy of the cell
+        /// </summary>
         public int Entropy()
         {
             if (tile != null) return 0;
             return options.Count;
         }
 
+        /// <summary>
+        /// Collapse the cell as a specific tile ruleset
+        /// </summary>
         public void CollapseAs(TileRuleset _tile)
         {
             tile = _tile;
         }
 
+        /// <summary>
+        /// Pick a valid tile ruleset randomly based on the rulesets weight
+        /// </summary>
         public void Collapse()
         {
             if (Entropy() == 0)
@@ -65,12 +89,18 @@ public static class MapGenerator
             });
         }
 
+        /// <summary>
+        /// Filter out rule tilesets that do not match the newly collapsed cell
+        /// </summary>
         public void Propagate(TileRuleset other, Cardinal dirFromThis)
         {
             options = options.Where(possible => Matches(possible, other, dirFromThis)).ToList();
         }
     }
 
+    /// <summary>
+    /// Calculates the coordinate on the board where the entropy is the smallest
+    /// </summary>
     static Vector2Int? MinimalEntropy(Cell[,] grid)
     {
         int minEntropy = int.MaxValue;
@@ -102,6 +132,9 @@ public static class MapGenerator
         return minCoords[Random.Range(0, minCoords.Count)];
     }
 
+    /// <summary>
+    /// Propagates a cells new state to all neighbors
+    /// </summary>
     static void PropagateCell(int x, int y, Cell[,] grid)
     {
         int width = grid.GetLength(0), height = grid.GetLength(1);
@@ -117,6 +150,9 @@ public static class MapGenerator
             grid[x + 1, y].Propagate(updated.tile, Cardinal.West);
     }
 
+    /// <summary>
+    /// Try to populate the map given a template-texture, before using WFC
+    /// </summary>
     private static void TryPopulateMap(GenerationConfig config, Cell[,] grid)
     {
         Texture2D generationTexture = config.PickTexture();
@@ -141,6 +177,9 @@ public static class MapGenerator
         }
     }
 
+    /// <summary>
+    /// Generate a Map-object from a generation config
+    /// </summary>
     public static Map Generate(GenerationConfig config)
     {
         Cell[,] grid = new Cell[config.width, config.height];
